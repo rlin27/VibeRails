@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.scripts]
-vibrails = "cli.main:cli"
+viberails = "cli.main:cli"
 
 [build-system]
 requires = ["setuptools>=68.0"]
