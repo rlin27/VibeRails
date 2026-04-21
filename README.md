@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛤️ VibeRails — Vibe Coding, Without the Chaos
+<img src="assets/viberails_logo.png" alt="VibeRails" width="480"/>
 
 ![Python](https://img.shields.io/badge/Python-3.12+-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
@@ -48,10 +48,11 @@ VibeRails fixes that. Define your team contract once, sync it to every developer
 ## Roadmap
 
 - [x] Project scaffold + architecture design
-- [ ] Server: member management + contract storage
+- [x] Server: member management + contract storage
+- [x] Server: sync API
+- [x] CLI: `viberails init` + `viberails sync`
+- [x] `.mdc` file generation for Cursor
 - [ ] Server: interface registry auto-scan
-- [ ] CLI: `viberails init` + `viberails sync`
-- [ ] `.mdc` file generation for Cursor
 - [ ] Web UI: member dashboard + contract editor
 - [ ] Docker Compose deployment
 - [ ] Support for additional IDE targets (Claude Code, GitHub Copilot)
@@ -62,7 +63,7 @@ VibeRails fixes that. Define your team contract once, sync it to every developer
 
 <div align="center">
 
-Built with 🛤️ by [Lin Rui](https://rlin27.github.io)
+Built with by [Lin Rui](https://rlin27.github.io)
 
 *Because your AI should know the rules before it writes the code.*
 
