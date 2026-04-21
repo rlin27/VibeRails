@@ -1,0 +1,1 @@
+"""VibeRails server package."""

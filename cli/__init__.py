@@ -1,0 +1,1 @@
+"""VibeRails CLI package."""
