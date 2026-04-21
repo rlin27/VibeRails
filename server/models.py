@@ -1,5 +1,7 @@
 """Shared response and domain models for the API skeleton."""
 
+from typing import Literal
+
 from pydantic import BaseModel
 
 
@@ -8,10 +10,20 @@ class HealthResponse(BaseModel):
     service: str = "vibrails-server"
 
 
-class Member(BaseModel):
-    id: int
+class MemberCreate(BaseModel):
     name: str
-    role: str = "member"
+    role: Literal["owner", "member"]
+
+
+class Member(BaseModel):
+    member_id: int
+    name: str
+    role: Literal["owner", "member"]
+    created_at: str
+
+
+class MessageResponse(BaseModel):
+    message: str
 
 
 class Contract(BaseModel):
