@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class HealthResponse(BaseModel):
@@ -60,6 +60,35 @@ class Standard(BaseModel):
     category: str
     content: str
     updated_at: str
+
+
+class SyncMember(BaseModel):
+    member_id: int
+    name: str
+    role: Literal["owner", "member"]
+
+
+class SyncScope(BaseModel):
+    patterns: list[str]
+
+
+class SyncStandard(BaseModel):
+    category: str
+    content: str
+
+
+class SyncStandards(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    global_: list[SyncStandard] = Field(default_factory=list, alias="global")
+    personal: list[SyncStandard] = Field(default_factory=list)
+
+
+class SyncContract(BaseModel):
+    member: SyncMember
+    scope: SyncScope
+    locked_modules: list[LockedModule]
+    standards: SyncStandards
 
 
 class SyncStatus(BaseModel):
