@@ -39,7 +39,7 @@ VibeRails fixes that. Define your team contract once, sync it to every developer
 - 🔍 **Interface Registry** — automatically scans your codebase for public interfaces; AI knows what already exists before it builds anything new
 - 🔄 **Dynamic Updates** — standards evolve as the project grows; one sync command keeps everyone current
 - 🖥️ **Web UI** — manage your team contract, members, and ownership from a browser
-- ⚡ **CLI Sync** — `vibrails sync` writes your personal contract directly into `.cursor/rules/`
+- ⚡ **CLI Sync** — `viberails sync` writes your personal contract directly into `.cursor/rules/`
 - 🐳 **Self-Hosted** — your contract stays on your server; `docker compose up` and you're running
 - 👤 **Solo-Friendly** — works just as well for individual developers who want consistent AI behavior
 
@@ -50,7 +50,7 @@ VibeRails fixes that. Define your team contract once, sync it to every developer
 - [x] Project scaffold + architecture design
 - [ ] Server: member management + contract storage
 - [ ] Server: interface registry auto-scan
-- [ ] CLI: `vibrails init` + `vibrails sync`
+- [ ] CLI: `viberails init` + `viberails sync`
 - [ ] `.mdc` file generation for Cursor
 - [ ] Web UI: member dashboard + contract editor
 - [ ] Docker Compose deployment
