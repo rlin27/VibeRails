@@ -26,10 +26,40 @@ class MessageResponse(BaseModel):
     message: str
 
 
-class Contract(BaseModel):
-    id: int
-    title: str
-    body: str = ""
+class ScopeUpdate(BaseModel):
+    patterns: list[str]
+
+
+class ScopeResponse(BaseModel):
+    member_id: int
+    patterns: list[str]
+
+
+class LockedModuleCreate(BaseModel):
+    pattern: str
+    reason: str
+
+
+class LockedModule(BaseModel):
+    pattern: str
+    reason: str
+
+
+class StandardCreate(BaseModel):
+    scope: str
+    category: str
+    content: str
+
+
+class StandardUpdate(BaseModel):
+    content: str
+
+
+class Standard(BaseModel):
+    scope: str
+    category: str
+    content: str
+    updated_at: str
 
 
 class SyncStatus(BaseModel):
