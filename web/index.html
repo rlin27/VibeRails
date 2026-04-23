@@ -6,28 +6,950 @@
     <title>VibeRails</title>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 2rem;
-        background: #0f172a;
-        color: #e2e8f0;
+      :root {
+        --bg: #f5f7fb;
+        --panel: #ffffff;
+        --panel-soft: #f8faff;
+        --border: #d8e1f0;
+        --text: #172033;
+        --muted: #63708a;
+        --primary: #4f7cff;
+        --primary-dark: #3d67df;
+        --danger: #e14c4c;
+        --shadow: 0 12px 32px rgba(28, 44, 84, 0.08);
       }
 
-      .card {
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 1.5rem;
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, Arial, sans-serif;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      .app-shell {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        background: #15203b;
+        color: #f0f4ff;
+        padding: 28px 18px;
+      }
+
+      .brand {
+        margin-bottom: 28px;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+
+      .brand p {
+        margin: 8px 0 0;
+        color: #b8c4e3;
+        font-size: 14px;
+      }
+
+      .nav-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .nav-button {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        padding: 12px 14px;
         border-radius: 12px;
-        background: #1e293b;
+        text-align: left;
+        cursor: pointer;
+        font-size: 15px;
+      }
+
+      .nav-button.active,
+      .nav-button:hover {
+        background: rgba(79, 124, 255, 0.2);
+      }
+
+      .content {
+        padding: 28px;
+      }
+
+      .page-header {
+        margin-bottom: 20px;
+      }
+
+      .page-header h2 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      .page-header p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .status-banner {
+        margin-bottom: 18px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: #fff6db;
+        color: #6c5311;
+      }
+
+      .error-banner {
+        background: #ffe3e3;
+        color: #8a2121;
+      }
+
+      .grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .cards-3 {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+
+      .cards-2 {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+
+      .panel.soft {
+        background: var(--panel-soft);
+      }
+
+      .panel h3,
+      .panel h4 {
+        margin-top: 0;
+      }
+
+      .member-card header,
+      .member-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .member-meta,
+      .muted {
+        color: var(--muted);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #e7eeff;
+        color: var(--primary-dark);
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .chip-list,
+      .inline-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #eef3ff;
+        color: var(--primary-dark);
+        font-size: 13px;
+      }
+
+      .list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .btn,
+      .btn-secondary,
+      .btn-danger {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .btn {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn:hover {
+        background: var(--primary-dark);
+      }
+
+      .btn-secondary {
+        background: #eaf0ff;
+        color: var(--primary-dark);
+      }
+
+      .btn-danger {
+        background: #ffe4e4;
+        color: var(--danger);
+      }
+
+      .btn:disabled,
+      .btn-secondary:disabled,
+      .btn-danger:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .form-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+      }
+
+      label {
+        display: grid;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: white;
+      }
+
+      textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
+
+      .split-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 360px) 1fr;
+        gap: 18px;
+      }
+
+      .list-item {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        background: white;
+      }
+
+      .list-item.selected {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+      }
+
+      .empty-state {
+        padding: 16px;
+        border-radius: 12px;
+        background: #f3f6fb;
+        color: var(--muted);
+      }
+
+      .member-editor {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+      }
+
+      .standards-member {
+        display: grid;
+        gap: 14px;
+      }
+
+      .standard-preview {
+        white-space: pre-wrap;
+        color: var(--muted);
+      }
+
+      @media (max-width: 900px) {
+        .app-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .split-layout {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <main class="card" x-data="{ status: 'ready' }">
-      <h1>VibeRails</h1>
-      <p>Single-page placeholder UI powered by Alpine.js.</p>
-      <p>Frontend status: <strong x-text="status"></strong></p>
-    </main>
+    <div class="app-shell" x-data="vibeRailsApp()" x-init="init()">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>VibeRails</h1>
+          <p>Team contract control center</p>
+        </div>
+
+        <nav class="nav-list">
+          <button class="nav-button" :class="{ active: currentPage === 'overview' }" @click="currentPage = 'overview'">总览</button>
+          <button class="nav-button" :class="{ active: currentPage === 'members' }" @click="currentPage = 'members'">成员管理</button>
+          <button class="nav-button" :class="{ active: currentPage === 'standards' }" @click="currentPage = 'standards'">团队规范</button>
+          <button class="nav-button" :class="{ active: currentPage === 'locked' }" @click="currentPage = 'locked'">Locked Modules</button>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <div class="page-header">
+          <h2 x-text="pageTitles[currentPage]"></h2>
+          <p x-text="pageDescriptions[currentPage]"></p>
+        </div>
+
+        <div class="status-banner" x-show="loading">Loading data from API...</div>
+        <div class="status-banner error-banner" x-show="error" x-text="error"></div>
+
+        <section x-show="currentPage === 'overview'" class="grid cards-3">
+          <template x-if="members.length === 0">
+            <div class="panel empty-state">No members yet.</div>
+          </template>
+
+          <template x-for="member in members" :key="member.member_id">
+            <article class="panel member-card">
+              <header>
+                <div>
+                  <h3 x-text="member.name"></h3>
+                  <div class="member-meta">ID: <span x-text="member.member_id"></span></div>
+                </div>
+                <span class="badge" x-text="member.role"></span>
+              </header>
+
+              <div class="grid" style="margin-top: 16px">
+                <div>
+                  <h4>负责模块</h4>
+                  <div class="chip-list" x-show="member.patterns.length > 0">
+                    <template x-for="pattern in member.patterns" :key="pattern">
+                      <span class="chip" x-text="pattern"></span>
+                    </template>
+                  </div>
+                  <p class="muted" x-show="member.patterns.length === 0">No scope patterns defined yet.</p>
+                </div>
+
+                <div>
+                  <h4>Goal</h4>
+                  <div class="standard-preview" x-text="member.goal || 'No goal defined yet.'"></div>
+                </div>
+              </div>
+            </article>
+          </template>
+        </section>
+
+        <section x-show="currentPage === 'members'" class="grid cards-2">
+          <div class="panel">
+            <h3>成员列表</h3>
+            <div class="list">
+              <template x-if="members.length === 0">
+                <div class="empty-state">No members yet.</div>
+              </template>
+
+              <template x-for="member in members" :key="member.member_id">
+                <div class="list-item">
+                  <div class="member-row">
+                    <div>
+                      <strong x-text="member.name"></strong>
+                      <div class="muted" x-text="member.role"></div>
+                    </div>
+                    <div class="actions">
+                      <button class="btn-secondary" @click="toggleMemberEditor(member.member_id)">
+                        <span x-text="expandedMemberId === member.member_id ? '收起 Scope' : '编辑 Scope'"></span>
+                      </button>
+                      <button class="btn-danger" @click="deleteMember(member.member_id)">删除</button>
+                    </div>
+                  </div>
+
+                  <div class="member-editor" x-show="expandedMemberId === member.member_id">
+                    <div class="inline-list" style="margin-bottom: 12px" x-show="member.patterns.length > 0">
+                      <template x-for="pattern in member.patterns" :key="pattern">
+                        <span class="chip">
+                          <span x-text="pattern"></span>
+                          <button
+                            type="button"
+                            style="margin-left: 8px; border: 0; background: transparent; color: inherit; cursor: pointer;"
+                            @click="removePattern(member.member_id, pattern)"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      </template>
+                    </div>
+                    <p class="muted" x-show="member.patterns.length === 0">No patterns yet.</p>
+
+                    <form class="form-row" @submit.prevent="addPattern(member.member_id)">
+                      <label>
+                        新增 Pattern
+                        <input type="text" x-model="patternDrafts[member.member_id]" placeholder="src/auth/**" />
+                      </label>
+                      <div class="actions" style="align-items: end">
+                        <button class="btn" type="submit">添加 Pattern</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>添加成员</h3>
+            <form class="form-grid" @submit.prevent="createMember()">
+              <label>
+                姓名
+                <input type="text" x-model="newMember.name" placeholder="Lin Rui" />
+              </label>
+              <label>
+                角色
+                <select x-model="newMember.role">
+                  <option value="member">member</option>
+                  <option value="owner">owner</option>
+                </select>
+              </label>
+              <div class="actions">
+                <button class="btn" type="submit">创建成员</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section x-show="currentPage === 'standards'" class="grid" style="gap: 22px">
+          <div class="split-layout">
+            <div class="panel">
+              <div class="member-row" style="margin-bottom: 12px">
+                <h3 style="margin: 0">全局规范</h3>
+                <button class="btn-secondary" @click="startGlobalCreate()">新增 Category</button>
+              </div>
+
+              <div class="list">
+                <template x-if="globalStandards.length === 0">
+                  <div class="empty-state">No global standards defined yet.</div>
+                </template>
+
+                <template x-for="standard in globalStandards" :key="standard.category">
+                  <div class="list-item" :class="{ selected: globalEditor.originalCategory === standard.category && globalEditor.mode === 'edit' }">
+                    <div class="member-row">
+                      <div>
+                        <strong x-text="standard.category"></strong>
+                        <div class="muted" x-text="formatUpdatedAt(standard.updated_at)"></div>
+                      </div>
+                      <div class="actions">
+                        <button class="btn-secondary" @click="editGlobalStandard(standard)">编辑</button>
+                        <button class="btn-danger" @click="deleteGlobalStandard(standard.category)">删除</button>
+                      </div>
+                    </div>
+                    <div class="standard-preview" style="margin-top: 10px" x-text="standard.content"></div>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3 x-text="globalEditor.mode === 'create' ? '新增全局规范' : '编辑全局规范'"></h3>
+              <form class="form-grid" @submit.prevent="saveGlobalStandard()">
+                <label>
+                  Category
+                  <input type="text" x-model="globalEditor.category" :disabled="globalEditor.mode === 'edit'" placeholder="naming" />
+                </label>
+                <label>
+                  Markdown Content
+                  <textarea x-model="globalEditor.content" placeholder="## 命名规范&#10;变量使用 snake_case。"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn" type="submit">保存</button>
+                  <button class="btn-secondary" type="button" @click="resetGlobalEditor()">清空</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>成员个人规范</h3>
+            <div class="grid cards-2">
+              <template x-for="member in members" :key="member.member_id">
+                <section class="panel soft standards-member">
+                  <div class="member-row">
+                    <div>
+                      <strong x-text="member.name"></strong>
+                      <div class="muted" x-text="member.role"></div>
+                    </div>
+                  </div>
+
+                  <div class="list">
+                    <template x-if="member.personalStandards.length === 0">
+                      <div class="empty-state">No personal standards defined yet.</div>
+                    </template>
+
+                    <template x-for="standard in member.personalStandards" :key="member.member_id + '-' + standard.category">
+                      <div class="list-item">
+                        <div class="member-row">
+                          <div>
+                            <strong x-text="standard.category"></strong>
+                            <div class="muted" x-text="formatUpdatedAt(standard.updated_at)"></div>
+                          </div>
+                          <div class="actions">
+                            <button class="btn-secondary" @click="editPersonalStandard(member.member_id, standard)">编辑</button>
+                            <button class="btn-danger" @click="deletePersonalStandard(member.member_id, standard.category)">删除</button>
+                          </div>
+                        </div>
+                        <div class="standard-preview" style="margin-top: 10px" x-text="standard.content"></div>
+                      </div>
+                    </template>
+                  </div>
+
+                  <form class="form-grid" @submit.prevent="savePersonalStandard(member.member_id)">
+                    <label>
+                      Category
+                      <input type="text" x-model="personalEditors[member.member_id].category" :disabled="personalEditors[member.member_id].mode === 'edit'" placeholder="goal" />
+                    </label>
+                    <label>
+                      Markdown Content
+                      <textarea x-model="personalEditors[member.member_id].content" placeholder="## 本周目标&#10;完成成员权限系统。"></textarea>
+                    </label>
+                    <div class="actions">
+                      <button class="btn" type="submit">保存</button>
+                      <button class="btn-secondary" type="button" @click="resetPersonalEditor(member.member_id)">清空</button>
+                    </div>
+                  </form>
+                </section>
+              </template>
+            </div>
+          </div>
+        </section>
+
+        <section x-show="currentPage === 'locked'" class="grid cards-2">
+          <div class="panel">
+            <h3>Locked Modules</h3>
+            <div class="list">
+              <template x-if="lockedModules.length === 0">
+                <div class="empty-state">No locked modules defined.</div>
+              </template>
+
+              <template x-for="item in lockedModules" :key="item.pattern">
+                <div class="list-item">
+                  <div class="member-row">
+                    <div>
+                      <strong x-text="item.pattern"></strong>
+                      <div class="muted" x-text="item.reason"></div>
+                    </div>
+                    <button class="btn-danger" @click="deleteLockedModule(item.pattern)">删除</button>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>添加 Locked Module</h3>
+            <form class="form-grid" @submit.prevent="createLockedModule()">
+              <label>
+                Pattern
+                <input type="text" x-model="newLocked.pattern" placeholder="src/core/**" />
+              </label>
+              <label>
+                Reason
+                <textarea x-model="newLocked.reason" placeholder="核心库，禁止修改"></textarea>
+              </label>
+              <div class="actions">
+                <button class="btn" type="submit">添加</button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      function vibeRailsApp() {
+        const baseUrl = "http://localhost:8000";
+
+        return {
+          baseUrl,
+          currentPage: "overview",
+          loading: false,
+          error: "",
+          expandedMemberId: null,
+          members: [],
+          lockedModules: [],
+          globalStandards: [],
+          newMember: { name: "", role: "member" },
+          newLocked: { pattern: "", reason: "" },
+          patternDrafts: {},
+          globalEditor: { mode: "create", category: "", content: "", originalCategory: "" },
+          personalEditors: {},
+          pageTitles: {
+            overview: "总览",
+            members: "成员管理",
+            standards: "团队规范",
+            locked: "Locked Modules",
+          },
+          pageDescriptions: {
+            overview: "快速查看成员、负责范围和每个人当前的目标。",
+            members: "管理成员列表和每位成员负责的代码范围。",
+            standards: "编辑全局规范和成员个人规范。",
+            locked: "维护所有禁止修改的模块规则。",
+          },
+
+          async init() {
+            await this.refreshAll();
+          },
+
+          async api(path, options = {}) {
+            const response = await fetch(`${this.baseUrl}${path}`, {
+              headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+              ...options,
+            });
+
+            let payload = null;
+            const text = await response.text();
+            if (text) {
+              try {
+                payload = JSON.parse(text);
+              } catch (error) {
+                payload = text;
+              }
+            }
+
+            if (!response.ok) {
+              const detail =
+                payload && typeof payload === "object" && payload.detail
+                  ? payload.detail
+                  : `Request failed: ${response.status}`;
+              throw new Error(detail);
+            }
+
+            return payload;
+          },
+
+          async refreshAll() {
+            this.loading = true;
+            this.error = "";
+
+            try {
+              const [members, lockedModules, globalStandards] = await Promise.all([
+                this.api("/members/"),
+                this.api("/contracts/locked"),
+                this.api("/contracts/standards/global"),
+              ]);
+
+              const enrichedMembers = await Promise.all(
+                members.map(async (member) => {
+                  const [scope, personalStandards] = await Promise.all([
+                    this.fetchScope(member.member_id),
+                    this.fetchStandards(String(member.member_id)),
+                  ]);
+
+                  const goalStandard = personalStandards.find(
+                    (standard) => standard.category === "goal"
+                  );
+
+                  return {
+                    ...member,
+                    patterns: scope.patterns,
+                    personalStandards,
+                    goal: goalStandard ? goalStandard.content : "",
+                  };
+                })
+              );
+
+              this.members = enrichedMembers;
+              this.lockedModules = lockedModules;
+              this.globalStandards = globalStandards;
+              this.syncEditors();
+            } catch (error) {
+              this.error = error.message || "Failed to load data.";
+            } finally {
+              this.loading = false;
+            }
+          },
+
+          async fetchScope(memberId) {
+            try {
+              return await this.api(`/contracts/scopes/${memberId}`);
+            } catch (error) {
+              if (String(error.message).includes("scope not found")) {
+                return { member_id: memberId, patterns: [] };
+              }
+              throw error;
+            }
+          },
+
+          async fetchStandards(scope) {
+            return this.api(`/contracts/standards/${scope}`);
+          },
+
+          syncEditors() {
+            const nextDrafts = {};
+            const nextEditors = {};
+
+            this.members.forEach((member) => {
+              nextDrafts[member.member_id] = this.patternDrafts[member.member_id] || "";
+              nextEditors[member.member_id] =
+                this.personalEditors[member.member_id] || {
+                  mode: "create",
+                  category: "",
+                  content: "",
+                  originalCategory: "",
+                };
+            });
+
+            this.patternDrafts = nextDrafts;
+            this.personalEditors = nextEditors;
+          },
+
+          toggleMemberEditor(memberId) {
+            this.expandedMemberId = this.expandedMemberId === memberId ? null : memberId;
+          },
+
+          resetGlobalEditor() {
+            this.globalEditor = { mode: "create", category: "", content: "", originalCategory: "" };
+          },
+
+          startGlobalCreate() {
+            this.resetGlobalEditor();
+          },
+
+          editGlobalStandard(standard) {
+            this.globalEditor = {
+              mode: "edit",
+              category: standard.category,
+              content: standard.content,
+              originalCategory: standard.category,
+            };
+          },
+
+          resetPersonalEditor(memberId) {
+            this.personalEditors[memberId] = {
+              mode: "create",
+              category: "",
+              content: "",
+              originalCategory: "",
+            };
+          },
+
+          editPersonalStandard(memberId, standard) {
+            this.personalEditors[memberId] = {
+              mode: "edit",
+              category: standard.category,
+              content: standard.content,
+              originalCategory: standard.category,
+            };
+          },
+
+          async createMember() {
+            await this.api("/members/", {
+              method: "POST",
+              body: JSON.stringify(this.newMember),
+            });
+            this.newMember = { name: "", role: "member" };
+            await this.refreshAll();
+          },
+
+          async deleteMember(memberId) {
+            await this.api(`/members/${memberId}`, { method: "DELETE" });
+            if (this.expandedMemberId === memberId) {
+              this.expandedMemberId = null;
+            }
+            await this.refreshAll();
+          },
+
+          async addPattern(memberId) {
+            const draft = (this.patternDrafts[memberId] || "").trim();
+            if (!draft) {
+              return;
+            }
+
+            const member = this.members.find((item) => item.member_id === memberId);
+            const patterns = member ? [...member.patterns] : [];
+            if (!patterns.includes(draft)) {
+              patterns.push(draft);
+            }
+
+            await this.api(`/contracts/scopes/${memberId}`, {
+              method: "PUT",
+              body: JSON.stringify({ patterns }),
+            });
+            this.patternDrafts[memberId] = "";
+            await this.refreshAll();
+          },
+
+          async removePattern(memberId, pattern) {
+            const member = this.members.find((item) => item.member_id === memberId);
+            if (!member) {
+              return;
+            }
+
+            const patterns = member.patterns.filter((item) => item !== pattern);
+            if (patterns.length === 0) {
+              try {
+                await this.api(`/contracts/scopes/${memberId}`, { method: "DELETE" });
+              } catch (error) {
+                if (!String(error.message).includes("scope not found")) {
+                  throw error;
+                }
+              }
+            } else {
+              await this.api(`/contracts/scopes/${memberId}`, {
+                method: "PUT",
+                body: JSON.stringify({ patterns }),
+              });
+            }
+
+            await this.refreshAll();
+          },
+
+          async saveGlobalStandard() {
+            const editor = this.globalEditor;
+            if (!editor.category.trim() || !editor.content.trim()) {
+              return;
+            }
+
+            if (editor.mode === "create") {
+              await this.api("/contracts/standards", {
+                method: "POST",
+                body: JSON.stringify({
+                  scope: "global",
+                  category: editor.category.trim(),
+                  content: editor.content,
+                }),
+              });
+            } else {
+              await this.api(`/contracts/standards/global/${encodeURIComponent(editor.originalCategory)}`, {
+                method: "PATCH",
+                body: JSON.stringify({ content: editor.content }),
+              });
+            }
+
+            this.resetGlobalEditor();
+            await this.refreshAll();
+          },
+
+          async deleteGlobalStandard(category) {
+            await this.api(`/contracts/standards/global/${encodeURIComponent(category)}`, {
+              method: "DELETE",
+            });
+            if (this.globalEditor.originalCategory === category) {
+              this.resetGlobalEditor();
+            }
+            await this.refreshAll();
+          },
+
+          async savePersonalStandard(memberId) {
+            const editor = this.personalEditors[memberId];
+            if (!editor.category.trim() || !editor.content.trim()) {
+              return;
+            }
+
+            if (editor.mode === "create") {
+              await this.api("/contracts/standards", {
+                method: "POST",
+                body: JSON.stringify({
+                  scope: String(memberId),
+                  category: editor.category.trim(),
+                  content: editor.content,
+                }),
+              });
+            } else {
+              await this.api(
+                `/contracts/standards/${memberId}/${encodeURIComponent(editor.originalCategory)}`,
+                {
+                  method: "PATCH",
+                  body: JSON.stringify({ content: editor.content }),
+                }
+              );
+            }
+
+            this.resetPersonalEditor(memberId);
+            await this.refreshAll();
+          },
+
+          async deletePersonalStandard(memberId, category) {
+            await this.api(`/contracts/standards/${memberId}/${encodeURIComponent(category)}`, {
+              method: "DELETE",
+            });
+            if (this.personalEditors[memberId]?.originalCategory === category) {
+              this.resetPersonalEditor(memberId);
+            }
+            await this.refreshAll();
+          },
+
+          async createLockedModule() {
+            await this.api("/contracts/locked", {
+              method: "POST",
+              body: JSON.stringify(this.newLocked),
+            });
+            this.newLocked = { pattern: "", reason: "" };
+            await this.refreshAll();
+          },
+
+          async deleteLockedModule(pattern) {
+            const encodedPattern = pattern
+              .split("/")
+              .map((part) => encodeURIComponent(part))
+              .join("/");
+
+            await this.api(`/contracts/locked/${encodedPattern}`, {
+              method: "DELETE",
+            });
+            await this.refreshAll();
+          },
+
+          formatUpdatedAt(value) {
+            if (!value) {
+              return "Updated just now";
+            }
+
+            const date = new Date(value.replace(" ", "T"));
+            if (Number.isNaN(date.getTime())) {
+              return value;
+            }
+
+            return `Updated ${date.toLocaleString()}`;
+          },
+        };
+      }
+    </script>
   </body>
 </html>
