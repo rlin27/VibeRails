@@ -121,10 +121,10 @@ The generated `.mdc` file tells your AI:
 
 ---
 
-<div align="center">
-
-Built with by [Lin Rui](https://rlin27.github.io)
-
-*Because your AI should know the rules before it writes the code.*
+*Your AI should know the rules before it writes the code.*
 
 </div>
+
+## Acknowledgements
+
+Built with the assistance of [Claude](https://claude.ai) (Anthropic) and [Cursor](https://cursor.com) (Anysphere).
