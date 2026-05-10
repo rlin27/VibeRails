@@ -45,16 +45,76 @@ VibeRails fixes that. Define your team contract once, sync it to every developer
 
 ---
 
+## Quick Start
+
+**Prerequisites:** Python 3.12+ · Docker + Docker Compose · Cursor IDE
+
+**Step 1: Deploy the server**
+
+```bash
+git clone https://github.com/rlin27/VibeRails.git
+cd VibeRails
+cp .env.example .env
+docker compose up -d
+```
+
+Server is now running at `http://localhost:8000`. Open `http://localhost:8000/ui` to manage your team contract.
+
+**Step 2: Install the CLI**
+
+```bash
+pip install viberails
+```
+
+**Step 3: Initialize your project**
+
+```bash
+cd your-project
+viberails init
+# Edit .vibrails.yml: set server address and your member_id
+viberails sync
+```
+
+Your personal contract is now live at `.cursor/rules/vibrails.mdc`. Cursor reads it automatically on every AI request.
+
+---
+
+## How It Works
+
+```
+Owner sets up team contract in Web UI
+        │
+        ▼
+Each developer runs: viberails sync
+        │
+        ▼
+CLI pulls contract from server
+        │
+        ▼
+Writes to .cursor/rules/vibrails.mdc
+        │
+        ▼
+Cursor injects it into every AI session
+```
+
+The generated `.mdc` file tells your AI:
+- Which files it's allowed to touch
+- What the team's coding standards are
+- What public interfaces already exist
+- Which modules are locked and off-limits
+
+---
+
 ## Roadmap
 
 - [x] Project scaffold + architecture design
 - [x] Server: member management + contract storage
 - [x] Server: sync API
+- [x] Server: interface registry auto-scan
 - [x] CLI: `viberails init` + `viberails sync`
 - [x] `.mdc` file generation for Cursor
-- [ ] Server: interface registry auto-scan
-- [ ] Web UI: member dashboard + contract editor
-- [ ] Docker Compose deployment
+- [x] Web UI: member dashboard + contract editor
+- [x] Docker Compose deployment
 - [ ] Support for additional IDE targets (Claude Code, GitHub Copilot)
 - [ ] AI-powered code review *(post-MVP)*
 - [ ] AI-powered test generation *(post-MVP)*
