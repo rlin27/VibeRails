@@ -1,13 +1,12 @@
 services:
   vibrails-server:
-    image: python:3.12-slim
-    working_dir: /app
-    volumes:
-      - .:/app
-    env_file:
-      - .env.example
-    command: >
-      sh -c "pip install --no-cache-dir -e . &&
-      uvicorn server.main:app --host 0.0.0.0 --port 8000"
+    build: .
     ports:
       - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - vibrails-data:/app/data
+
+volumes:
+  vibrails-data:
