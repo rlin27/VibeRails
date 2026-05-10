@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from urllib import error, request
 
+from cli.scanner import scan_interfaces
+
 
 def _parse_scalar(value: str) -> str:
     value = value.strip()
@@ -85,7 +87,21 @@ def _render_global_standards(standards: list[dict[str, str]]) -> str:
     return "\n\n".join(item["content"] for item in standards)
 
 
-def render_contract_markdown(payload: dict[str, object]) -> str:
+def _render_interface_registry(interfaces: dict[str, list[str]]) -> str:
+    if not interfaces:
+        return "- No public interfaces found."
+
+    sections: list[str] = []
+    for file_path, signatures in interfaces.items():
+        bullet_lines = "\n".join(f"- {signature}" for signature in signatures)
+        sections.append(f"## {file_path}\n{bullet_lines}")
+    return "\n\n".join(sections)
+
+
+def render_contract_markdown(
+    payload: dict[str, object],
+    interfaces: dict[str, list[str]] | None = None,
+) -> str:
     """Render sync payload JSON into an .mdc rules file."""
     member = payload.get("member", {})
     patterns = payload.get("patterns", [])
@@ -99,7 +115,7 @@ def render_contract_markdown(payload: dict[str, object]) -> str:
         global_standards = standards.get("global", global_standards)
         personal_standards = standards.get("personal", personal_standards)
 
-    return f"""---
+    markdown = f"""---
 description: VibeRails team contract
 alwaysApply: true
 ---
@@ -120,6 +136,13 @@ alwaysApply: true
 # Your Personal Standards
 {_render_standards(personal_standards if isinstance(personal_standards, list) else [])}
 """
+    if interfaces:
+        markdown += f"""
+
+# Interface Registry
+{_render_interface_registry(interfaces)}
+"""
+    return markdown
 
 
 def sync(project_dir: Path | None = None) -> Path:
@@ -128,6 +151,9 @@ def sync(project_dir: Path | None = None) -> Path:
     config = load_config(base_dir / ".vibrails.yml")
     server = str(config.get("server", "")).rstrip("/")
     member_id = normalize_member_id(config.get("member_id"))
+    raw_patterns = config.get("api_scan", [])
+    api_scan_patterns = raw_patterns if isinstance(raw_patterns, list) else []
+    project_root = str(base_dir)
     sync_url = f"{server}/sync/{member_id}"
 
     try:
@@ -138,8 +164,13 @@ def sync(project_dir: Path | None = None) -> Path:
     except error.URLError as exc:
         raise RuntimeError(f"failed to reach server: {exc.reason}") from exc
 
+    result = scan_interfaces(project_root, [str(pattern) for pattern in api_scan_patterns])
+    interfaces = result
     rules_dir = base_dir / ".cursor" / "rules"
     rules_dir.mkdir(parents=True, exist_ok=True)
     output_path = rules_dir / "vibrails.mdc"
-    output_path.write_text(render_contract_markdown(payload), encoding="utf-8")
+    output_path.write_text(
+        render_contract_markdown(payload, interfaces=interfaces),
+        encoding="utf-8",
+    )
     return output_path
