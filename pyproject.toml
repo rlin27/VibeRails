@@ -12,11 +12,11 @@ dependencies = [
 ]
 
 [project.scripts]
-viberails = "cli.main:cli"
+viberails = "viberails_cli:cli"
 
 [build-system]
 requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["server*", "cli*"]
+include = ["server*", "cli*", "viberails_cli*"]

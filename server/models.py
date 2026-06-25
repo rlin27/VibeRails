@@ -45,6 +45,45 @@ class LockedModule(BaseModel):
     reason: str
 
 
+class InterfaceScanItem(BaseModel):
+    file_path: str
+    signature: str
+
+
+class InterfaceUploadRequest(BaseModel):
+    interfaces: list[InterfaceScanItem]
+
+
+class InterfaceUploadResponse(BaseModel):
+    inserted: int
+    deprecated: int
+    skipped: int
+
+
+class InterfaceUpdate(BaseModel):
+    status: Literal["stable", "in_progress", "planned", "deprecated"]
+    owner_id: int | None = None
+    description: str | None = None
+
+
+class PlannedInterfaceCreate(BaseModel):
+    file_path: str
+    signature: str
+    description: str | None = None
+    owner_id: int | None = None
+
+
+class Interface(BaseModel):
+    id: int
+    file_path: str
+    signature: str
+    description: str | None
+    status: Literal["stable", "in_progress", "planned", "deprecated"]
+    owner_id: int | None
+    owner_name: str | None
+    updated_at: str
+
+
 class StandardCreate(BaseModel):
     scope: str
     category: str

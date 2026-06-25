@@ -65,6 +65,22 @@ async def init_db() -> None:
             """
         )
 
+        await connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS interfaces (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                file_path TEXT NOT NULL,
+                signature TEXT NOT NULL,
+                description TEXT,
+                status TEXT NOT NULL DEFAULT 'stable'
+                    CHECK(status IN ('stable', 'in_progress', 'planned', 'deprecated')),
+                owner_id INTEGER REFERENCES members(member_id),
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(file_path, signature)
+            )
+            """
+        )
+
         await connection.commit()
 
 

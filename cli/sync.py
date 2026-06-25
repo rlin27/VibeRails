@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import json
 from pathlib import Path
 from urllib import error, request
@@ -9,8 +10,15 @@ from urllib import error, request
 from cli.scanner import scan_interfaces
 
 
-def _parse_scalar(value: str) -> str:
+def _parse_scalar(value: str) -> object:
     value = value.strip()
+    if value.startswith("[") and value.endswith("]"):
+        try:
+            parsed = ast.literal_eval(value)
+        except (SyntaxError, ValueError):
+            return value
+        if isinstance(parsed, list):
+            return parsed
     if value.startswith(("'", '"')) and value.endswith(("'", '"')) and len(value) >= 2:
         return value[1:-1]
     return value
@@ -98,9 +106,26 @@ def _render_interface_registry(interfaces: dict[str, list[str]]) -> str:
     return "\n\n".join(sections)
 
 
+def _render_server_interface_registry(interfaces: list[dict[str, object]]) -> str:
+    by_file: dict[str, list[dict[str, object]]] = {}
+    for item in interfaces:
+        by_file.setdefault(str(item["file_path"]), []).append(item)
+
+    sections: list[str] = []
+    for file_path in sorted(by_file):
+        lines: list[str] = []
+        for item in by_file[file_path]:
+            owner_name = item.get("owner_name")
+            owner_text = f" (owner: {owner_name})" if owner_name else ""
+            lines.append(f"- [{item['status']}] {item['signature']}{owner_text}")
+        sections.append(f"## {file_path}\n" + "\n".join(lines))
+    return "\n\n".join(sections)
+
+
 def render_contract_markdown(
     payload: dict[str, object],
     interfaces: dict[str, list[str]] | None = None,
+    server_interfaces: list[dict[str, object]] | None = None,
 ) -> str:
     """Render sync payload JSON into an .mdc rules file."""
     member = payload.get("member", {})
@@ -136,7 +161,13 @@ alwaysApply: true
 # Your Personal Standards
 {_render_standards(personal_standards if isinstance(personal_standards, list) else [])}
 """
-    if interfaces:
+    if server_interfaces:
+        markdown += f"""
+
+# Interface Registry
+{_render_server_interface_registry(server_interfaces)}
+"""
+    elif interfaces:
         markdown += f"""
 
 # Interface Registry
@@ -145,14 +176,34 @@ alwaysApply: true
     return markdown
 
 
+def _get_api_scan_patterns(config: dict[str, object]) -> list[str]:
+    raw_patterns = config.get("api_scan", [])
+    if isinstance(raw_patterns, list):
+        return [str(pattern) for pattern in raw_patterns]
+    if isinstance(raw_patterns, str) and raw_patterns.strip():
+        return [raw_patterns.strip()]
+    return []
+
+
+def _fetch_interfaces(server: str) -> list[dict[str, object]]:
+    try:
+        with request.urlopen(f"{server}/contracts/interfaces") as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (error.HTTPError, error.URLError):
+        return []
+
+    if isinstance(payload, list):
+        return [item for item in payload if isinstance(item, dict)]
+    return []
+
+
 def sync(project_dir: Path | None = None) -> Path:
     """Fetch contract data and write it to the Cursor rules directory."""
     base_dir = project_dir or Path.cwd()
     config = load_config(base_dir / ".vibrails.yml")
     server = str(config.get("server", "")).rstrip("/")
     member_id = normalize_member_id(config.get("member_id"))
-    raw_patterns = config.get("api_scan", [])
-    api_scan_patterns = raw_patterns if isinstance(raw_patterns, list) else []
+    api_scan_patterns = _get_api_scan_patterns(config)
     project_root = str(base_dir)
     sync_url = f"{server}/sync/{member_id}"
 
@@ -164,13 +215,20 @@ def sync(project_dir: Path | None = None) -> Path:
     except error.URLError as exc:
         raise RuntimeError(f"failed to reach server: {exc.reason}") from exc
 
-    result = scan_interfaces(project_root, [str(pattern) for pattern in api_scan_patterns])
-    interfaces = result
+    server_interfaces = _fetch_interfaces(server)
+    interfaces = {}
+    if not server_interfaces:
+        interfaces = scan_interfaces(project_root, api_scan_patterns)
+
     rules_dir = base_dir / ".cursor" / "rules"
     rules_dir.mkdir(parents=True, exist_ok=True)
     output_path = rules_dir / "vibrails.mdc"
     output_path.write_text(
-        render_contract_markdown(payload, interfaces=interfaces),
+        render_contract_markdown(
+            payload,
+            interfaces=interfaces,
+            server_interfaces=server_interfaces,
+        ),
         encoding="utf-8",
     )
     return output_path

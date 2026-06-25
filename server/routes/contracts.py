@@ -7,9 +7,14 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from server.database import get_db
 from server.models import (
+    Interface,
+    InterfaceUpdate,
+    InterfaceUploadRequest,
+    InterfaceUploadResponse,
     LockedModule,
     LockedModuleCreate,
     MessageResponse,
+    PlannedInterfaceCreate,
     ScopeResponse,
     ScopeUpdate,
     Standard,
@@ -44,6 +49,31 @@ async def _get_standard(
     )
     row = await cursor.fetchone()
     return Standard(**dict(row)) if row is not None else None
+
+
+async def _get_interface(
+    db: aiosqlite.Connection,
+    interface_id: int,
+) -> Interface | None:
+    cursor = await db.execute(
+        """
+        SELECT
+            interfaces.id,
+            interfaces.file_path,
+            interfaces.signature,
+            interfaces.description,
+            interfaces.status,
+            interfaces.owner_id,
+            members.name AS owner_name,
+            interfaces.updated_at
+        FROM interfaces
+        LEFT JOIN members ON members.member_id = interfaces.owner_id
+        WHERE interfaces.id = ?
+        """,
+        (interface_id,),
+    )
+    row = await cursor.fetchone()
+    return Interface(**dict(row)) if row is not None else None
 
 
 def _validate_standard_scope(scope: str) -> str:
@@ -151,6 +181,168 @@ async def delete_locked_module(
         raise HTTPException(status_code=404, detail="locked module not found")
 
     return MessageResponse(message="locked module deleted")
+
+
+@router.post("/interfaces/upload", response_model=InterfaceUploadResponse)
+async def upload_interfaces(
+    payload: InterfaceUploadRequest,
+    db: aiosqlite.Connection = Depends(get_db),
+) -> InterfaceUploadResponse:
+    inserted = 0
+    deprecated = 0
+    skipped = 0
+
+    scanned_by_file: dict[str, set[str]] = {}
+    for item in payload.interfaces:
+        scanned_by_file.setdefault(item.file_path, set()).add(item.signature)
+
+        cursor = await db.execute(
+            """
+            SELECT id
+            FROM interfaces
+            WHERE file_path = ? AND signature = ?
+            """,
+            (item.file_path, item.signature),
+        )
+        if await cursor.fetchone() is not None:
+            skipped += 1
+            continue
+
+        await db.execute(
+            """
+            INSERT INTO interfaces (file_path, signature, status)
+            VALUES (?, ?, 'stable')
+            """,
+            (item.file_path, item.signature),
+        )
+        inserted += 1
+
+    for file_path, current_signatures in scanned_by_file.items():
+        existing_cursor = await db.execute(
+            """
+            SELECT signature, status
+            FROM interfaces
+            WHERE file_path = ?
+            """,
+            (file_path,),
+        )
+        existing_rows = await existing_cursor.fetchall()
+        for row in existing_rows:
+            if row["signature"] in current_signatures or row["status"] in {
+                "deprecated",
+                "planned",
+            }:
+                continue
+
+            await db.execute(
+                """
+                UPDATE interfaces
+                SET status = 'deprecated', updated_at = CURRENT_TIMESTAMP
+                WHERE file_path = ? AND signature = ?
+                """,
+                (file_path, row["signature"]),
+            )
+            deprecated += 1
+
+    await db.commit()
+    return InterfaceUploadResponse(
+        inserted=inserted,
+        deprecated=deprecated,
+        skipped=skipped,
+    )
+
+
+@router.get("/interfaces", response_model=list[Interface])
+async def list_interfaces(
+    db: aiosqlite.Connection = Depends(get_db),
+) -> list[Interface]:
+    cursor = await db.execute(
+        """
+        SELECT
+            interfaces.id,
+            interfaces.file_path,
+            interfaces.signature,
+            interfaces.description,
+            interfaces.status,
+            interfaces.owner_id,
+            members.name AS owner_name,
+            interfaces.updated_at
+        FROM interfaces
+        LEFT JOIN members ON members.member_id = interfaces.owner_id
+        ORDER BY interfaces.file_path, interfaces.signature
+        """
+    )
+    rows = await cursor.fetchall()
+    return [Interface(**dict(row)) for row in rows]
+
+
+@router.patch("/interfaces/{interface_id}", response_model=Interface)
+async def update_interface(
+    interface_id: int,
+    payload: InterfaceUpdate,
+    db: aiosqlite.Connection = Depends(get_db),
+) -> Interface:
+    existing = await _get_interface(db, interface_id)
+    if existing is None:
+        raise HTTPException(status_code=404, detail="interface not found")
+
+    if payload.owner_id is not None and not await _member_exists(db, payload.owner_id):
+        raise HTTPException(status_code=404, detail="owner not found")
+
+    await db.execute(
+        """
+        UPDATE interfaces
+        SET status = ?,
+            owner_id = ?,
+            description = ?,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+        """,
+        (payload.status, payload.owner_id, payload.description, interface_id),
+    )
+    await db.commit()
+
+    updated = await _get_interface(db, interface_id)
+    if updated is None:
+        raise HTTPException(status_code=404, detail="interface not found")
+    return updated
+
+
+@router.post("/interfaces/planned", response_model=Interface, status_code=201)
+async def create_planned_interface(
+    payload: PlannedInterfaceCreate,
+    db: aiosqlite.Connection = Depends(get_db),
+) -> Interface:
+    if payload.owner_id is not None and not await _member_exists(db, payload.owner_id):
+        raise HTTPException(status_code=404, detail="owner not found")
+
+    try:
+        cursor = await db.execute(
+            """
+            INSERT INTO interfaces (
+                file_path,
+                signature,
+                description,
+                owner_id,
+                status
+            )
+            VALUES (?, ?, ?, ?, 'planned')
+            """,
+            (
+                payload.file_path,
+                payload.signature,
+                payload.description,
+                payload.owner_id,
+            ),
+        )
+        await db.commit()
+    except aiosqlite.IntegrityError as exc:
+        raise HTTPException(status_code=400, detail="interface already exists") from exc
+
+    created = await _get_interface(db, cursor.lastrowid)
+    if created is None:
+        raise HTTPException(status_code=500, detail="failed to create interface")
+    return created
 
 
 @router.post("/standards", response_model=Standard, status_code=201)
