@@ -1,5 +1,7 @@
 """FastAPI entrypoint for the VibeRails server."""
 
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -39,3 +41,20 @@ async def read_root() -> HealthResponse:
 @app.get("/ui")
 async def serve_ui() -> FileResponse:
     return FileResponse("web/index.html")
+
+
+@app.get("/config")
+async def read_config() -> dict[str, str | None]:
+    config_path = Path(".vibrails.yml")
+    if not config_path.exists():
+        return {"member_id": None}
+
+    for line in config_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip().startswith("member_id:"):
+            continue
+
+        _, value = line.split(":", 1)
+        member_id = value.strip().strip("\"'")
+        return {"member_id": member_id or None}
+
+    return {"member_id": None}

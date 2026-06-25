@@ -36,7 +36,9 @@ VibeRails fixes that. Define your team contract once, sync it to every developer
 
 - 👤 **Ownership Declaration** — each developer declares which modules they own; AI stays in its lane
 - 📋 **Team Standards** — shared coding style, naming conventions, and test requirements injected into every AI session
-- 🔍 **Interface Registry** — automatically scans your codebase for public interfaces; AI knows what already exists before it builds anything new
+- 🔍 **Interface Registry** — scans and uploads public interfaces, tracks lifecycle status, owners, and planned APIs
+- 🧭 **Contracts Workspace** — manage global standards, personal standards, and locked modules from one master-detail page
+- 🧩 **Features Workspace** — group interfaces by feature, track ownership, and discuss implementation notes
 - 🔄 **Dynamic Updates** — standards evolve as the project grows; one sync command keeps everyone current
 - 🖥️ **Web UI** — manage your team contract, members, and ownership from a browser
 - ⚡ **CLI Sync** — `viberails sync` writes your personal contract directly into `.cursor/rules/`
@@ -72,6 +74,7 @@ pip install viberails
 cd your-project
 viberails init
 # Edit .vibrails.yml: set server address and your member_id
+viberails scan --upload
 viberails sync
 ```
 
@@ -111,10 +114,11 @@ The generated `.mdc` file tells your AI:
 - [x] Server: member management + contract storage
 - [x] Server: sync API
 - [x] Server: interface registry auto-scan
-- [x] CLI: `viberails init` + `viberails sync`
+- [x] CLI: `viberails init` + `viberails scan --upload` + `viberails sync`
 - [x] `.mdc` file generation for Cursor
-- [x] Web UI: member dashboard + contract editor
+- [x] Web UI: Overview, Contracts, and Interfaces & Features workspaces
 - [x] Docker Compose deployment
+- [ ] Persist feature discussions and interface-feature links on the server
 - [ ] Support for additional IDE targets (Claude Code, GitHub Copilot)
 - [ ] AI-powered code review *(post-MVP)*
 - [ ] AI-powered test generation *(post-MVP)*
