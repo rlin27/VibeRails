@@ -14,7 +14,7 @@
 
 </div>
 
-<img src="assets/viberails_demo.gif" alt="VibeRails demo" width="900">
+<video src="assets/UI.mp4" controls width="100%"></video>
 
 ---
 
