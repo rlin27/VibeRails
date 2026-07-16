@@ -130,6 +130,155 @@ class SyncContract(BaseModel):
     standards: SyncStandards
 
 
+class SyncLogEntry(BaseModel):
+    id: int
+    member_id: int
+    status: str
+    detail: str | None = None
+    synced_at: str
+
+
+class PaginatedInterfaces(BaseModel):
+    items: list[Interface]
+    total: int
+    limit: int
+    offset: int
+
+
 class SyncStatus(BaseModel):
     state: str = "idle"
     detail: str = "sync logic not implemented yet"
+    recent_syncs: list[SyncLogEntry] = []
+
+
+# ===== Feature Models =====
+class FeatureCreate(BaseModel):
+    id: str | None = None
+    name: str
+    description: str | None = None
+    status: Literal["planned", "in_progress", "stable", "deprecated"] = "planned"
+    owner_id: int | None = None
+
+
+class FeatureUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
+    status: Literal["planned", "in_progress", "stable", "deprecated"] | None = None
+    owner_id: int | None = None
+
+
+class Feature(BaseModel):
+    id: str
+    name: str
+    description: str | None
+    status: Literal["planned", "in_progress", "stable", "deprecated"]
+    owner_id: int | None
+    owner_name: str | None = None
+    interface_ids: list[int] = []
+    created_at: str
+    updated_at: str
+
+
+class FeatureInterfaceLink(BaseModel):
+    interface_id: int
+
+
+# ===== AI Provider Models =====
+class AIProviderCreate(BaseModel):
+    name: str
+    api_base_url: str
+    api_key: str
+    model: str = "claude-sonnet-4-20250514"
+    protocol: Literal["anthropic", "openai"] = "anthropic"
+    is_active: bool = True
+
+
+class AIProviderUpdate(BaseModel):
+    name: str | None = None
+    api_base_url: str | None = None
+    api_key: str | None = None
+    model: str | None = None
+    protocol: Literal["anthropic", "openai"] | None = None
+    is_active: bool | None = None
+
+
+class AIProvider(BaseModel):
+    id: int
+    name: str
+    api_base_url: str
+    model: str
+    protocol: Literal["anthropic", "openai"]
+    is_active: bool
+    created_at: str
+    updated_at: str
+
+
+class AIProviderTestResult(BaseModel):
+    success: bool
+    message: str
+
+
+# ===== Chat Models =====
+class ChatSendRequest(BaseModel):
+    feature_id: str
+    content: str
+    provider_id: int | None = None
+
+
+class ChatMessage(BaseModel):
+    id: int
+    feature_id: str
+    author_name: str
+    author_role: Literal["user", "assistant", "system"]
+    content: str
+    created_at: str
+
+
+class ChatSendResponse(BaseModel):
+    user_message: ChatMessage
+    assistant_message: ChatMessage
+
+
+# ===== Issue Models =====
+class IssueCreate(BaseModel):
+    title: str
+    description: str | None = None
+    status: Literal["open", "in_progress", "resolved", "closed"] = "open"
+    assignee_id: int | None = None
+    feature_id: str | None = None
+    interface_id: int | None = None
+
+
+class IssueUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    status: Literal["open", "in_progress", "resolved", "closed"] | None = None
+    assignee_id: int | None = None
+    feature_id: str | None = None
+    interface_id: int | None = None
+
+
+class Issue(BaseModel):
+    id: int
+    title: str
+    description: str | None
+    status: Literal["open", "in_progress", "resolved", "closed"]
+    assignee_id: int | None
+    assignee_name: str | None = None
+    feature_id: str | None
+    interface_id: int | None
+    created_at: str
+    updated_at: str
+    comment_count: int = 0
+
+
+class IssueCommentCreate(BaseModel):
+    content: str
+
+
+class IssueComment(BaseModel):
+    id: int
+    issue_id: int
+    author_name: str
+    content: str
+    created_at: str

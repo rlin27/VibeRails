@@ -9,7 +9,15 @@ from fastapi.staticfiles import StaticFiles
 
 from server.database import init_db
 from server.models import HealthResponse
-from server.routes import contracts_router, members_router, sync_router
+from server.routes import (
+    ai_providers_router,
+    chat_router,
+    contracts_router,
+    features_router,
+    issues_router,
+    members_router,
+    sync_router,
+)
 
 
 app = FastAPI(title="VibeRails Server", version="0.1.0")
@@ -26,6 +34,10 @@ app.mount("/static", StaticFiles(directory="web"), name="static")
 app.include_router(members_router)
 app.include_router(contracts_router)
 app.include_router(sync_router)
+app.include_router(ai_providers_router)
+app.include_router(chat_router)
+app.include_router(issues_router)
+app.include_router(features_router)
 
 
 @app.on_event("startup")

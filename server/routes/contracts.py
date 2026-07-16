@@ -14,6 +14,7 @@ from server.models import (
     LockedModule,
     LockedModuleCreate,
     MessageResponse,
+    PaginatedInterfaces,
     PlannedInterfaceCreate,
     ScopeResponse,
     ScopeUpdate,
@@ -252,12 +253,33 @@ async def upload_interfaces(
     )
 
 
-@router.get("/interfaces", response_model=list[Interface])
+@router.get("/interfaces")
 async def list_interfaces(
+    limit: int = 0,
+    offset: int = 0,
+    search: str | None = None,
+    status: str | None = None,
+    owner_id: int | None = None,
     db: aiosqlite.Connection = Depends(get_db),
-) -> list[Interface]:
-    cursor = await db.execute(
-        """
+) -> list[Interface] | PaginatedInterfaces:
+    conditions: list[str] = []
+    params: list[str | int] = []
+
+    if search:
+        conditions.append("(interfaces.file_path LIKE ? OR interfaces.signature LIKE ?)")
+        like = f"%{search}%"
+        params.append(like)
+        params.append(like)
+    if status:
+        conditions.append("interfaces.status = ?")
+        params.append(status)
+    if owner_id is not None:
+        conditions.append("interfaces.owner_id = ?")
+        params.append(owner_id)
+
+    where_clause = " AND ".join(conditions) if conditions else "1=1"
+
+    base_query = f"""
         SELECT
             interfaces.id,
             interfaces.file_path,
@@ -269,10 +291,34 @@ async def list_interfaces(
             interfaces.updated_at
         FROM interfaces
         LEFT JOIN members ON members.member_id = interfaces.owner_id
-        ORDER BY interfaces.file_path, interfaces.signature
-        """
+        WHERE {where_clause}
+    """
+
+    count_cursor = await db.execute(
+        f"SELECT COUNT(*) FROM ({base_query})",
+        params,
     )
+    count_row = await count_cursor.fetchone()
+    total = count_row[0] if count_row else 0
+
+    if limit > 0:
+        query = f"{base_query} ORDER BY interfaces.file_path, interfaces.signature LIMIT ? OFFSET ?"
+        data_params = params + [limit, offset]
+    else:
+        query = f"{base_query} ORDER BY interfaces.file_path, interfaces.signature"
+        data_params = params
+
+    cursor = await db.execute(query, data_params)
     rows = await cursor.fetchall()
+
+    if limit > 0:
+        return PaginatedInterfaces(
+            items=[Interface(**dict(row)) for row in rows],
+            total=total,
+            limit=limit,
+            offset=offset,
+        )
+
     return [Interface(**dict(row)) for row in rows]
 
 
