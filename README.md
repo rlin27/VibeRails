@@ -10,9 +10,11 @@
 
 **A self-hosted team contract engine for vibe coding — define ownership, enforce standards, and sync rules directly into your AI coding tool.**
 
-<video src="assets/UI.mp4" controls width="800" loop style="border-radius: 12px; margin: 20px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.15);"></video>
+
 
 </div>
+
+<video src="assets/UI.mp4" controls width="100%" style="max-width:800px; display:block; margin:20px auto; border-radius:12px;"></video>
 
 ---
 
