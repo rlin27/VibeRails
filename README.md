@@ -14,7 +14,7 @@
 
 </div>
 
-![](assets/viberails_demo.gif)
+<img src="assets/viberails_demo.gif" alt="VibeRails demo" width="900">
 
 ---
 
