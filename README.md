@@ -14,7 +14,7 @@
 
 </div>
 
-<video src="assets/UI.mp4" controls width="100%" style="max-width:800px; display:block; margin:20px auto; border-radius:12px;"></video>
+<video src="https://raw.githubusercontent.com/rlin27/VibeRails/main/assets/UI.mp4" controls width="100%" style="max-width:800px; display:block; margin:20px auto; border-radius:12px;"></video>
 
 ---
 
