@@ -10,6 +10,8 @@
 
 **A self-hosted team contract engine for vibe coding — define ownership, enforce standards, and sync rules directly into your AI coding tool.**
 
+<video src="assets/pages.mp4" controls width="800" loop style="border-radius: 12px; margin: 20px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.15);"></video>
+
 </div>
 
 ---
@@ -39,6 +41,8 @@ VibeRails fixes that. Define your team contract once, sync it to every developer
 - 🔍 **Interface Registry** — scans and uploads public interfaces, tracks lifecycle status, owners, and planned APIs
 - 🧭 **Contracts Workspace** — manage global standards, personal standards, and locked modules from one master-detail page
 - 🧩 **Features Workspace** — group interfaces by feature, track ownership, and discuss implementation notes
+- 🤖 **AI Chat** — per-feature AI discussion room. Supports Anthropic, OpenAI, DeepSeek, Qwen and any OpenAI-compatible provider
+- 🐛 **Issue Tracker** — built-in issue board with status workflow, assignee management, and threaded comments
 - 🔄 **Dynamic Updates** — standards evolve as the project grows; one sync command keeps everyone current
 - 🖥️ **Web UI** — manage your team contract, members, and ownership from a browser
 - ⚡ **CLI Sync** — `viberails sync` writes your personal contract directly into `.cursor/rules/`
