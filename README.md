@@ -14,7 +14,13 @@
 
 </div>
 
-<video src="https://raw.githubusercontent.com/rlin27/VibeRails/main/assets/UI.mp4" controls width="100%" style="max-width:800px; display:block; margin:20px auto; border-radius:12px;"></video>
+<p align="center">
+  <a href="https://github.com/rlin27/VibeRails/blob/main/assets/UI.mp4">
+    <img src="https://raw.githubusercontent.com/rlin27/VibeRails/main/assets/viberails_logo.png" alt="Demo video" width="480"/>
+    <br/>
+    <strong>▶ Watch the demo video</strong>
+  </a>
+</p>
 
 ---
 
