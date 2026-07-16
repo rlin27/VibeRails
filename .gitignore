@@ -5,4 +5,4 @@ __pycache__/
 data/
 *.egg-info/
 dist/
-build/
+build/assets/UI.mp4
