@@ -125,9 +125,14 @@ The generated `.mdc` file tells your AI:
 - [x] CLI: `viberails init` + `viberails scan --upload` + `viberails sync`
 - [x] `.mdc` file generation for Cursor
 - [x] Web UI: Overview, Contracts, and Interfaces & Features workspaces
+- [x] Web UI: Dark mode and responsive layout
+- [x] Web UI: AI Chat with multi-provider support (Anthropic / OpenAI / DeepSeek / Qwen)
+- [x] Web UI: Issue tracking board with comments
+- [x] Server: Feature CRUD persistence
+- [x] Server: Interface pagination and search
 - [x] Docker Compose deployment
-- [ ] Persist feature discussions and interface-feature links on the server
 - [ ] Support for additional IDE targets (Claude Code, GitHub Copilot)
+- [ ] Role-based access control & authentication
 - [ ] AI-powered code review *(post-MVP)*
 - [ ] AI-powered test generation *(post-MVP)*
 
