@@ -14,13 +14,7 @@
 
 </div>
 
-<p align="center">
-  <a href="https://github.com/rlin27/VibeRails/blob/main/assets/UI.mp4">
-    <img src="https://raw.githubusercontent.com/rlin27/VibeRails/main/assets/viberails_logo.png" alt="Demo video" width="480"/>
-    <br/>
-    <strong>▶ Watch the demo video</strong>
-  </a>
-</p>
+<video src="assets/UI.mp4" controls></video>
 
 ---
 
