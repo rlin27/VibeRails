@@ -14,13 +14,17 @@
 
 </div>
 
+---
+
 <div align="center">
-  <video src="https://raw.githubusercontent.com/rlin27/VibeRails/main/assets/UI.mp4" width="800" controls loop muted>
+  <video src="https://github.com/rlin27/VibeRails/blob/main/assets/UI.mp4"
+         width="800"
+         controls
+         loop
+         muted>
     Your browser does not support the video tag.
   </video>
 </div>
-
----
 
 ## Why VibeRails?
 
