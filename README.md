@@ -14,7 +14,7 @@
 
 </div>
 
-<video src="assets/UI.mp4" controls></video>
+![](assets/viberails_demo.gif)
 
 ---
 
