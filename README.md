@@ -14,7 +14,11 @@
 
 </div>
 
-<video src="assets/UI.mp4" controls width="100%"></video>
+<div align="center">
+  <video src="assets/UI.mp4" width="800" controls loop muted>
+    Your browser does not support the video tag.
+  </video>
+</div>
 
 ---
 
