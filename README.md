@@ -17,9 +17,7 @@
 ---
 
 <div align="center">
-  <video src="assets/UI.mp4" width="800" controls loop muted>
-    Your browser does not support the video tag.
-  </video>
+  <img src="assets/viberails_demo.gif" alt="VibeRails demo" width="800">
 </div>
 
 ## Why VibeRails?
