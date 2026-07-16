@@ -10,6 +10,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
+      /* ================================ */
+      /* CSS: Theme Variables              */
+      /* ================================ */
       :root {
         --bg: #f5f6fa;
         --sidebar: #202638;
@@ -22,9 +25,49 @@
         --primary: #4f7cff;
         --primary-dark: #3d67df;
         --danger: #e14c4c;
+        --danger-bg: #ffe4e4;
         --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        --sidebar-text: #f0f4ff;
+        --hover-bg: #f7f9ff;
+        --selected-bg: #f0f4ff;
+        --input-bg: #ffffff;
+        --chip-bg: #eef3ff;
+        --badge-bg: #e7eeff;
+        --btn-secondary-bg: #eaf0ff;
+        --empty-bg: #f3f6fb;
       }
 
+      [data-theme="dark"] {
+        --bg: #0f172a;
+        --sidebar: #1e293b;
+        --header: #0f172a;
+        --panel: #1e293b;
+        --panel-soft: #1a2332;
+        --border: #334155;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --primary: #60a5fa;
+        --primary-dark: #3b82f6;
+        --danger: #f87171;
+        --danger-bg: #3b1a1a;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --sidebar-text: #cbd5e1;
+        --hover-bg: #1e293b;
+        --selected-bg: #1e3a5f;
+        --input-bg: #0f172a;
+        --chip-bg: #1e3a5f;
+        --badge-bg: #1e3a5f;
+        --btn-secondary-bg: #1e3a5f;
+        --empty-bg: #1a2332;
+      }
+
+      body {
+        transition: background 0.3s, color 0.3s;
+      }
+
+      /* ================================ */
+      /* CSS: Reset & Base                 */
+      /* ================================ */
       * {
         box-sizing: border-box;
       }
@@ -47,6 +90,9 @@
         font: inherit;
       }
 
+      /* ================================ */
+      /* CSS: Layout - Header / Sidebar    */
+      /* ================================ */
       .top-header {
         position: fixed;
         top: 0;
@@ -67,7 +113,7 @@
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        color: #4f7cff;
+        color: var(--primary);
         font-size: 24px;
         font-weight: 800;
         letter-spacing: 4px;
@@ -91,6 +137,40 @@
         color: white;
       }
 
+      .theme-toggle {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 8px;
+        padding: 6px 10px;
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
+      }
+
+      .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .hamburger {
+        display: none;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 8px;
+        padding: 6px 10px;
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 1;
+        color: white;
+      }
+
+      .hamburger:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar-overlay {
+        display: none;
+      }
+
       .app-shell {
         display: grid;
         grid-template-columns: 240px 1fr;
@@ -103,7 +183,7 @@
         top: 56px;
         height: calc(100vh - 56px);
         background: var(--sidebar);
-        color: #f0f4ff;
+        color: var(--sidebar-text);
         padding: 24px 16px;
       }
 
@@ -143,7 +223,7 @@
         bottom: 8px;
         width: 3px;
         border-radius: 999px;
-        background: #4f7cff;
+        background: var(--primary);
       }
 
       .content {
@@ -157,7 +237,7 @@
 
       .page-header h1 {
         margin: 0 0 8px;
-        color: #1a1f2e;
+        color: var(--text);
         font-size: 28px;
         font-weight: 800;
       }
@@ -213,9 +293,12 @@
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       }
 
+      /* ================================ */
+      /* CSS: Components - Panels / Cards  */
+      /* ================================ */
       .panel {
         background: var(--panel);
-        border: 1px solid #e8eaf0;
+        border: 1px solid var(--border);
         border-radius: 8px;
         box-shadow: var(--shadow);
         padding: 20px;
@@ -237,7 +320,7 @@
         padding: 0;
         border-radius: 0;
         background: transparent;
-        color: #666;
+        color: var(--muted);
         font-size: 13px;
         font-weight: 600;
         letter-spacing: 0;
@@ -251,7 +334,7 @@
       .card-section + .card-section {
         margin-top: 16px;
         padding-top: 16px;
-        border-top: 1px solid #f0f2f7;
+        border-top: 1px solid var(--border);
       }
 
       .member-card {
@@ -298,11 +381,11 @@
       }
 
       .member-list-item:hover {
-        background: #f7f9ff;
+        background: var(--hover-bg);
       }
 
       .member-list-item.selected {
-        background: #f0f4ff;
+        background: var(--selected-bg);
       }
 
       .member-list-item.selected::before {
@@ -313,7 +396,7 @@
         bottom: 8px;
         width: 3px;
         border-radius: 999px;
-        background: #4f7cff;
+        background: var(--primary);
       }
 
       .contract-list-item {
@@ -331,11 +414,11 @@
       }
 
       .contract-list-item:hover {
-        background: #f7f9ff;
+        background: var(--hover-bg);
       }
 
       .contract-list-item.selected {
-        background: #f0f4ff;
+        background: var(--selected-bg);
       }
 
       .contract-list-item.selected::before {
@@ -346,7 +429,7 @@
         bottom: 8px;
         width: 3px;
         border-radius: 999px;
-        background: #4f7cff;
+        background: var(--primary);
       }
 
       .avatar {
@@ -355,8 +438,8 @@
         width: 36px;
         height: 36px;
         border-radius: 999px;
-        background: #eaf0ff;
-        color: #4f7cff;
+        background: var(--btn-secondary-bg);
+        color: var(--primary);
         font-size: 14px;
         font-weight: 800;
         text-transform: uppercase;
@@ -379,14 +462,14 @@
 
       .member-detail-header h2 {
         margin: 0 0 6px;
-        color: #1a1f2e;
+        color: var(--text);
         font-size: 24px;
       }
 
       .team-settings {
         margin-top: 20px;
         padding-top: 16px;
-        border-top: 1px solid #f0f2f7;
+        border-top: 1px solid var(--border);
       }
 
       .team-settings-body {
@@ -398,7 +481,7 @@
       .contracts-section {
         margin-top: 28px;
         padding-top: 28px;
-        border-top: 2px solid #dbe3f3;
+        border-top: 2px solid var(--border);
       }
 
       .row {
@@ -418,11 +501,11 @@
       }
 
       .list-item {
-        border: 1px solid #e8eaf0;
+        border: 1px solid var(--border);
         border-radius: 8px;
         padding: 14px;
-        background: white;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        background: var(--input-bg);
+        box-shadow: var(--shadow);
       }
 
       .list-item.selected {
@@ -446,11 +529,14 @@
       .chip {
         padding: 6px 10px;
         border-radius: 999px;
-        background: #eef3ff;
+        background: var(--chip-bg);
         color: var(--primary-dark);
         font-size: 13px;
       }
 
+      /* ================================ */
+      /* CSS: Badges & Status              */
+      /* ================================ */
       .badge,
       .status-badge {
         display: inline-flex;
@@ -462,7 +548,7 @@
       }
 
       .badge {
-        background: #e7eeff;
+        background: var(--badge-bg);
         color: var(--primary-dark);
       }
 
@@ -490,6 +576,9 @@
         color: #4b5563;
       }
 
+      /* ================================ */
+      /* CSS: Buttons                      */
+      /* ================================ */
       .btn,
       .btn-secondary,
       .btn-danger {
@@ -511,15 +600,18 @@
       }
 
       .btn-secondary {
-        background: #eaf0ff;
+        background: var(--btn-secondary-bg);
         color: var(--primary-dark);
       }
 
       .btn-danger {
-        background: #ffe4e4;
+        background: var(--danger-bg);
         color: var(--danger);
       }
 
+      /* ================================ */
+      /* CSS: Forms & Inputs               */
+      /* ================================ */
       .form-grid {
         display: grid;
         gap: 12px;
@@ -545,7 +637,7 @@
         border: 1px solid var(--border);
         border-radius: 8px;
         padding: 10px 12px;
-        background: white;
+        background: var(--input-bg);
       }
 
       textarea {
@@ -556,7 +648,7 @@
       .empty-state {
         padding: 16px;
         border-radius: 8px;
-        background: #f3f6fb;
+        background: var(--empty-bg);
         color: var(--muted);
       }
 
@@ -580,6 +672,9 @@
         gap: 10px;
       }
 
+      /* ================================ */
+      /* CSS: Modals                       */
+      /* ================================ */
       .modal-backdrop {
         position: fixed;
         inset: 0;
@@ -610,14 +705,160 @@
         margin: 0;
       }
 
+      /* === Toast Notifications === */
+      .toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 50;
+        display: grid;
+        gap: 10px;
+        max-width: 380px;
+        pointer-events: none;
+      }
+
+      .toast {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        pointer-events: auto;
+        animation: slideInUp 0.3s ease;
+      }
+
+      .toast-icon {
+        flex-shrink: 0;
+        font-size: 18px;
+      }
+
+      .toast-success { border-left: 4px solid #22c55e; }
+      .toast-error { border-left: 4px solid var(--danger); }
+      .toast-info { border-left: 4px solid var(--primary); }
+      .toast-warning { border-left: 4px solid #f59e0b; }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* === End Toast === */
+
+      /* === Skeleton Loading === */
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+
+      .skeleton {
+        background: linear-gradient(90deg, var(--panel) 25%, var(--border) 50%, var(--panel) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 8px;
+        color: transparent !important;
+        user-select: none;
+        pointer-events: none;
+      }
+
+      .skeleton-line {
+        height: 14px;
+        margin-bottom: 10px;
+        width: 100%;
+      }
+
+      .skeleton-line:last-child {
+        width: 60%;
+      }
+
+      .skeleton-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        flex-shrink: 0;
+      }
+
+      .skeleton-card {
+        height: 80px;
+        margin-bottom: 12px;
+      }
+
+      .skeleton-panel {
+        height: 200px;
+      }
+      /* === End Skeleton === */
+
+      /* === Animations === */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .panel, .list-item, .modal {
+        transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+      }
+
+      .panel:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      }
+
+      [data-theme="dark"] .panel:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      .btn, .btn-secondary, .btn-danger {
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .btn:active, .btn-secondary:active, .btn-danger:active {
+        transform: scale(0.97);
+      }
+
+      .empty-state {
+        text-align: center;
+      }
+      /* === End Animations === */
+
       @media (max-width: 1000px) {
         .app-shell {
           grid-template-columns: 1fr;
         }
 
         .sidebar {
-          position: static;
-          height: auto;
+          position: fixed;
+          top: 56px;
+          left: 0;
+          z-index: 25;
+          width: 260px;
+          height: calc(100vh - 56px);
+          transform: translateX(-100%);
+          transition: transform 0.25s ease;
+        }
+
+        .sidebar.sidebar-mobile-open {
+          transform: translateX(0);
+        }
+
+        .sidebar-overlay {
+          display: block;
+          position: fixed;
+          inset: 0;
+          background: rgba(15, 23, 42, 0.48);
+          z-index: 24;
+        }
+
+        .hamburger {
+          display: block;
         }
 
         .overview-layout,
@@ -631,6 +872,7 @@
           align-items: center;
           height: 56px;
           padding: 10px 16px;
+          gap: 12px;
         }
 
         .app-shell {
@@ -643,6 +885,8 @@
     <div x-data="vibeRailsApp()" x-init="init()">
       <header class="top-header">
         <div class="logo">VibeRails</div>
+        <button class="hamburger" @click="toggleSidebar()" aria-label="Toggle sidebar">&#9776;</button>
+        <button class="theme-toggle" @click="toggleTheme()" x-html="isDark ? '&#9728;&#65039;' : '&#127769;'" :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"></button>
         <label class="viewer">
           Viewing as
           <select x-model="currentMemberId" @change="setCurrentMember()">
@@ -655,11 +899,14 @@
       </header>
 
       <div class="app-shell">
-        <aside class="sidebar">
+        <div class="sidebar-overlay" x-show="sidebarOpen" @click="sidebarOpen = false" x-cloak></div>
+        <aside class="sidebar" :class="{'sidebar-mobile-open': sidebarOpen}">
           <nav class="nav-list">
-            <button class="nav-button" :class="{ active: currentPage === 'overview' }" @click="currentPage = 'overview'">Overview</button>
-            <button class="nav-button" :class="{ active: currentPage === 'contracts' }" @click="currentPage = 'contracts'">Contracts</button>
-            <button class="nav-button" :class="{ active: currentPage === 'features' }" @click="currentPage = 'features'">Interfaces & Features</button>
+            <button class="nav-button" :class="{ active: currentPage === 'overview' }" @click="currentPage = 'overview'; sidebarOpen = false">Overview</button>
+            <button class="nav-button" :class="{ active: currentPage === 'contracts' }" @click="currentPage = 'contracts'; sidebarOpen = false">Contracts</button>
+            <button class="nav-button" :class="{ active: currentPage === 'features' }" @click="currentPage = 'features'; sidebarOpen = false">Interfaces & Features</button>
+            <button class="nav-button" :class="{ active: currentPage === 'issues' }" @click="currentPage = 'issues'; issueFilter.status = ''; refreshIssues(); sidebarOpen = false">Issues</button>
+            <button class="nav-button" :class="{ active: currentPage === 'settings' }" @click="currentPage = 'settings'; sidebarOpen = false">AI Settings</button>
           </nav>
         </aside>
 
@@ -668,17 +915,28 @@
             <h1 x-text="pageTitles[currentPage]"></h1>
           </div>
 
-          <div class="status-banner" x-show="loading">Loading data from API...</div>
           <div class="status-banner error-banner" x-show="error" x-text="error"></div>
 
           <section x-show="currentPage === 'overview'" class="overview-layout">
             <aside class="panel member-list-panel">
               <h3 class="section-title">Member List</h3>
-              <template x-if="members.length === 0">
+
+              <template x-if="loadingMembers">
+                <div class="member-list">
+                  <template x-for="i in 4" :key="i">
+                    <div style="display: flex; align-items: center; gap: 10px; padding: 8px 10px;">
+                      <div class="skeleton skeleton-avatar"></div>
+                      <div class="skeleton skeleton-line" style="flex: 1"></div>
+                    </div>
+                  </template>
+                </div>
+              </template>
+
+              <template x-if="!loadingMembers && members.length === 0">
                 <div class="empty-state">No members yet.</div>
               </template>
 
-              <div class="member-list">
+              <div class="member-list" x-show="!loadingMembers">
                 <template x-for="member in members" :key="member.member_id">
                   <button
                     class="member-list-item"
@@ -694,7 +952,15 @@
             </aside>
 
             <section class="panel member-detail-panel">
-              <template x-if="!selectedOverviewMember">
+              <template x-if="loadingMembers">
+                <div>
+                  <div class="skeleton" style="width: 180px; height: 28px; margin-bottom: 20px;"></div>
+                  <div class="skeleton skeleton-card" style="width: 100%;"></div>
+                  <div class="skeleton skeleton-card" style="width: 100%;"></div>
+                </div>
+              </template>
+
+              <template x-if="!loadingMembers && !selectedOverviewMember">
                 <div class="empty-state">Select a member to view details.</div>
               </template>
 
@@ -745,7 +1011,7 @@
                               <option value="owner">owner</option>
                             </select>
                           </label>
-                          <button class="btn" type="submit">Add Member</button>
+                          <button class="btn" type="submit" :disabled="isLoading('createMember')">Add Member</button>
                         </form>
                       </div>
 
@@ -946,12 +1212,12 @@
             <aside class="panel">
               <div class="row">
                 <h2 class="section-title">Features</h2>
-                <button class="btn-secondary" x-show="isCurrentUserOwner" @click="openFeatureModal()">Add Feature</button>
+                <button class="btn-secondary" x-show="isCurrentUserOwner" @click="openFeatureModal()">+ Add</button>
               </div>
 
               <div class="list" style="margin-top: 16px">
                 <template x-if="features.length === 0">
-                  <div class="empty-state">No features yet. Add one to get started.</div>
+                  <div class="empty-state">No features yet.</div>
                 </template>
                 <template x-for="feature in features" :key="feature.id">
                   <div class="list-item feature-card" :class="{ selected: selectedFeatureId === feature.id }" @click="selectFeature(feature.id)">
@@ -959,26 +1225,8 @@
                       <strong x-text="feature.name"></strong>
                       <span class="status-badge" :class="'status-' + feature.status" x-text="feature.status"></span>
                     </div>
-                    <div class="muted" style="margin-top: 8px">
+                    <div class="muted" style="margin-top: 4px; font-size: 13px;">
                       Owner: <span x-text="ownerName(feature.owner_id) || 'Unassigned'"></span>
-                    </div>
-                    <div x-show="selectedFeatureId === feature.id" style="margin-top: 12px">
-                      <div class="muted">Interfaces</div>
-                      <div class="list" style="margin-top: 8px">
-                        <template x-for="item in featureInterfaces(feature)" :key="item.id">
-                          <div class="interface-signature" x-text="item.signature"></div>
-                        </template>
-                        <div class="muted" x-show="featureInterfaces(feature).length === 0">No interfaces linked.</div>
-                      </div>
-                      <div class="muted" style="margin-top: 10px">Discussion</div>
-                      <div class="list" style="margin-top: 8px">
-                        <template x-if="feature.comments.length === 0">
-                          <div class="muted">No comments yet. Start the discussion.</div>
-                        </template>
-                        <template x-for="comment in feature.comments.slice(0, 2)" :key="comment.id">
-                          <div class="muted" x-text="`${comment.author}: ${comment.content}`"></div>
-                        </template>
-                      </div>
                     </div>
                   </div>
                 </template>
@@ -991,7 +1239,7 @@
                     <div class="empty-state">No unassigned interfaces.</div>
                   </template>
                   <template x-for="item in unassignedInterfaces()" :key="item.id">
-                    <div class="list-item">
+                    <div class="list-item" style="cursor: pointer;" @click="openInterfaceEditor(item)">
                       <div class="interface-signature" x-text="item.signature"></div>
                       <div class="muted" x-text="item.file_path"></div>
                     </div>
@@ -1006,109 +1254,333 @@
               </template>
 
               <template x-if="selectedFeature">
-                <div class="grid">
-                  <div class="feature-detail-header card-section">
-                    <div class="row">
-                      <div>
-                        <h2 x-text="selectedFeature.name"></h2>
-                        <p class="muted" x-text="selectedFeature.description || 'No description yet.'"></p>
-                      </div>
-                      <span class="status-badge" :class="'status-' + selectedFeature.status" x-text="selectedFeature.status"></span>
-                    </div>
+                <div>
+                  <div style="display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 0;">
+                    <button class="btn-secondary" style="border-radius: 8px 8px 0 0;" :class="{ 'btn': activeFeatureTab === 'details' }" @click="activeFeatureTab = 'details'">Details</button>
+                    <button class="btn-secondary" style="border-radius: 8px 8px 0 0;" :class="{ 'btn': activeFeatureTab === 'chat' }" @click="activeFeatureTab = 'chat'; loadChatMessages(selectedFeature.id)">Chat</button>
+                    <button class="btn-secondary" style="border-radius: 8px 8px 0 0;" :class="{ 'btn': activeFeatureTab === 'issues' }" @click="activeFeatureTab = 'issues'; issueFilter.status = ''; refreshIssues(selectedFeature?.id)">Issues</button>
+                    <button class="btn-secondary" style="border-radius: 8px 8px 0 0;" :class="{ 'btn': activeFeatureTab === 'interfaces' }" @click="activeFeatureTab = 'interfaces'">Interfaces</button>
                   </div>
 
-                  <form class="form-grid card-section" x-show="isCurrentUserOwner" @submit.prevent="saveFeatureDetails()">
-                    <label>
-                      Feature Name
-                      <input type="text" x-model="selectedFeatureDraft.name" />
-                    </label>
-                    <label>
-                      Description
-                      <textarea x-model="selectedFeatureDraft.description"></textarea>
-                    </label>
-                    <div class="form-row">
-                      <label>
-                        Status
-                        <select x-model="selectedFeatureDraft.status">
-                          <option value="planned">planned</option>
-                          <option value="in_progress">in_progress</option>
-                          <option value="stable">stable</option>
-                          <option value="deprecated">deprecated</option>
-                        </select>
-                      </label>
-                      <label>
-                        Owner
-                        <select x-model="selectedFeatureDraft.owner_id">
+                  <div x-show="activeFeatureTab === 'details'">
+                    <div class="feature-detail-header card-section">
+                      <div class="row">
+                        <div>
+                          <h2 x-text="selectedFeature.name"></h2>
+                          <p class="muted" x-text="selectedFeature.description || 'No description yet.'"></p>
+                        </div>
+                        <span class="status-badge" :class="'status-' + selectedFeature.status" x-text="selectedFeature.status"></span>
+                      </div>
+                    </div>
+                    <form class="form-grid card-section" x-show="isCurrentUserOwner" @submit.prevent="saveFeatureDetails()">
+                      <label>Name<input type="text" x-model="selectedFeatureDraft.name" /></label>
+                      <label>Description<textarea x-model="selectedFeatureDraft.description"></textarea></label>
+                      <div class="form-row">
+                        <label>Status<select x-model="selectedFeatureDraft.status">
+                          <option value="planned">planned</option><option value="in_progress">in_progress</option><option value="stable">stable</option><option value="deprecated">deprecated</option>
+                        </select></label>
+                        <label>Owner<select x-model="selectedFeatureDraft.owner_id">
                           <option value="">Unassigned</option>
                           <template x-for="member in members" :key="member.member_id">
                             <option :value="String(member.member_id)" x-text="member.name"></option>
                           </template>
-                        </select>
-                      </label>
-                    </div>
-                    <button class="btn" type="submit">Save Feature</button>
-                  </form>
+                        </select></label>
+                      </div>
+                      <button class="btn" type="submit">Save Feature</button>
+                    </form>
+                  </div>
 
-                  <div class="card-section">
-                    <div class="row">
-                      <h3 class="section-title">Linked Interfaces</h3>
-                      <label x-show="isCurrentUserOwner" style="min-width: 280px">
-                        Link Interface
-                        <select x-model="interfaceLinkDraft" @change="linkInterfaceToSelectedFeature()">
-                          <option value="">Select interface</option>
-                          <template x-for="item in interfaces" :key="item.id">
-                            <option :value="String(item.id)" x-text="`${item.file_path} - ${item.signature}`"></option>
-                          </template>
-                        </select>
-                      </label>
+                  <div x-show="activeFeatureTab === 'chat'">
+                    <div style="max-height: 400px; overflow-y: auto; margin-bottom: 16px; display: grid; gap: 12px;">
+                      <template x-if="chatMessages.length === 0 && !chatLoading && !chatSending">
+                        <div class="empty-state">No messages yet. Start a conversation with AI.</div>
+                      </template>
+                      <template x-if="chatLoading">
+                        <div class="empty-state">Loading messages...</div>
+                      </template>
+                      <template x-for="msg in chatMessages" :key="msg.id">
+                        <div class="list-item" :style="msg.author_role === 'assistant' ? 'background: var(--panel-soft); border-left: 3px solid var(--primary);' : ''">
+                          <div class="row">
+                            <strong x-text="msg.author_name"></strong>
+                            <span class="muted" style="font-size: 12px" x-text="msg.created_at"></span>
+                          </div>
+                          <div class="comment-body" style="margin-top: 6px" x-html="marked.parse(msg.content)"></div>
+                        </div>
+                      </template>
+                      <div x-show="chatSending" class="list-item" style="background: var(--panel-soft);"><div class="muted">AI is thinking...</div></div>
+                    </div>
+                    <form class="form-grid" @submit.prevent="sendChatMessage()">
+                      <div style="display: flex; gap: 8px;">
+                        <textarea x-model="chatDraft" placeholder="Ask the AI about this feature..." style="flex: 1; min-height: 60px;" :disabled="chatSending"></textarea>
+                        <button class="btn" type="submit" :disabled="!chatDraft.trim() || chatSending" style="align-self: flex-end;">
+                          <span x-text="chatSending ? 'Sending...' : 'Send'"></span>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+                  <div x-show="activeFeatureTab === 'issues'">
+                    <div class="row" style="margin-bottom: 16px">
+                      <div class="actions">
+                        <button class="btn-secondary" :class="{ 'btn': issueFilter.status === '' }" @click="issueFilter.status = ''; refreshIssues()">All</button>
+                        <button class="btn-secondary" :class="{ 'btn': issueFilter.status === 'open' }" @click="issueFilter.status = 'open'; refreshIssues()">Open</button>
+                        <button class="btn-secondary" :class="{ 'btn': issueFilter.status === 'in_progress' }" @click="issueFilter.status = 'in_progress'; refreshIssues()">In Progress</button>
+                        <button class="btn-secondary" :class="{ 'btn': issueFilter.status === 'resolved' }" @click="issueFilter.status = 'resolved'; refreshIssues()">Resolved</button>
+                        <button class="btn-secondary" :class="{ 'btn': issueFilter.status === 'closed' }" @click="issueFilter.status = 'closed'; refreshIssues()">Closed</button>
+                      </div>
+                      <button class="btn" @click="openIssueModal(null)">+ New Issue</button>
                     </div>
                     <div class="list">
-                      <template x-if="featureInterfaces(selectedFeature).length === 0">
-                        <div class="empty-state">No interfaces linked.</div>
+                      <template x-if="issues.length === 0">
+                        <div class="empty-state">No issues found.</div>
                       </template>
-                      <template x-for="item in featureInterfaces(selectedFeature)" :key="item.id">
+                      <template x-for="issue in issues" :key="issue.id">
                         <div class="list-item">
                           <div class="row">
                             <div>
-                              <div class="interface-signature" x-text="item.signature"></div>
-                              <div class="muted" x-text="item.file_path"></div>
+                              <strong x-text="issue.title"></strong>
+                              <div class="muted" x-text="issue.description || 'No description'"></div>
                             </div>
-                            <button class="btn-danger" x-show="isCurrentUserOwner" @click="unlinkInterfaceFromSelectedFeature(item.id)">Unlink</button>
+                            <div class="actions">
+                              <span class="status-badge" :class="'status-' + issue.status" x-text="issue.status"></span>
+                              <button class="btn-secondary" @click="openIssueModal(issue)">Edit</button>
+                              <button class="btn-danger" @click="deleteIssue(issue.id)">Delete</button>
+                            </div>
                           </div>
+                          <div style="margin-top: 8px; font-size: 13px; color: var(--muted);">
+                            Assignee: <span x-text="issueAssigneeName(issue.assignee_id) || 'Unassigned'"></span>
+                            &middot; Comments: <span x-text="issue.comment_count || 0"></span>
+                          </div>
+                          <div x-show="expandedIssueId === issue.id" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+                            <div class="list" style="gap: 8px;">
+                              <template x-for="c in issueComments" :key="c.id">
+                                <div style="font-size: 13px; padding: 8px; background: var(--panel-soft); border-radius: 6px;">
+                                  <strong x-text="c.author_name"></strong>
+                                  <span class="muted" style="font-size: 11px; margin-left: 8px;" x-text="c.created_at"></span>
+                                  <div style="margin-top: 4px;" x-text="c.content"></div>
+                                </div>
+                              </template>
+                            </div>
+                            <form class="form-row" style="margin-top: 8px;" @submit.prevent="addIssueComment(issue.id)">
+                              <input type="text" x-model="issueCommentDraft" placeholder="Add a comment..." />
+                              <button class="btn" type="submit" :disabled="!issueCommentDraft.trim()">Comment</button>
+                            </form>
+                          </div>
+                          <button class="btn-secondary" style="margin-top: 8px; font-size: 12px;" @click="toggleIssueComments(issue.id)">
+                            <span x-text="expandedIssueId === issue.id ? 'Hide comments' : 'Show comments'"></span>
+                          </button>
                         </div>
                       </template>
                     </div>
                   </div>
 
-                  <div class="card-section">
-                    <h3 class="section-title">Discussion</h3>
-                    <div class="list">
-                      <template x-if="selectedFeature.comments.length === 0">
-                        <div class="empty-state">No comments yet. Start the discussion.</div>
-                      </template>
-                      <template x-for="comment in selectedFeature.comments" :key="comment.id">
-                        <div class="list-item">
-                          <div class="row">
-                            <strong x-text="comment.author"></strong>
-                            <span class="muted" x-text="comment.created_at"></span>
+                  <div x-show="activeFeatureTab === 'interfaces'">
+                    <div class="card-section">
+                      <div class="row">
+                        <h3 class="section-title">Linked Interfaces</h3>
+                        <label x-show="isCurrentUserOwner" style="min-width: 280px">
+                          Link Interface<select x-model="interfaceLinkDraft" @change="linkInterfaceToSelectedFeature()">
+                            <option value="">Select interface</option>
+                            <template x-for="item in interfaces" :key="item.id">
+                              <option :value="String(item.id)" x-text="`${item.file_path} - ${item.signature}`"></option>
+                            </template>
+                          </select>
+                        </label>
+                      </div>
+                      <div class="list">
+                        <template x-if="featureInterfaces(selectedFeature).length === 0">
+                          <div class="empty-state">No interfaces linked.</div>
+                        </template>
+                        <template x-for="item in featureInterfaces(selectedFeature)" :key="item.id">
+                          <div class="list-item">
+                            <div class="row">
+                              <div>
+                                <div class="interface-signature" x-text="item.signature"></div>
+                                <div class="muted" x-text="item.file_path"></div>
+                              </div>
+                              <button class="btn-danger" x-show="isCurrentUserOwner" @click="unlinkInterfaceFromSelectedFeature(item.id)">Unlink</button>
+                            </div>
                           </div>
-                          <div class="comment-body" style="margin-top: 8px" x-text="comment.content"></div>
-                        </div>
-                      </template>
+                        </template>
+                      </div>
                     </div>
-                    <form class="form-grid" style="margin-top: 14px" @submit.prevent="addCommentToSelectedFeature()">
-                      <label>
-                        Comment
-                        <textarea x-model="commentDraft" placeholder="Share an implementation note or decision."></textarea>
-                      </label>
-                      <button class="btn" type="submit">Add Comment</button>
-                    </form>
                   </div>
                 </div>
               </template>
             </section>
           </section>
+
+          <!-- Standalone Issues page -->
+          <section x-show="currentPage === 'issues'" class="grid">
+            <div class="panel">
+              <div class="row" style="margin-bottom: 16px">
+                <h2 class="section-title">All Issues</h2>
+                <button class="btn" @click="openIssueModal(null)">+ New Issue</button>
+              </div>
+              <div class="actions" style="margin-bottom: 16px">
+                <button class="btn-secondary" :class="{ 'btn': issueFilter.status === '' }" @click="issueFilter.status = ''; refreshIssues()">All</button>
+                <button class="btn-secondary" :class="{ 'btn': issueFilter.status === 'open' }" @click="issueFilter.status = 'open'; refreshIssues()">Open</button>
+                <button class="btn-secondary" :class="{ 'btn': issueFilter.status === 'in_progress' }" @click="issueFilter.status = 'in_progress'; refreshIssues()">In Progress</button>
+                <button class="btn-secondary" :class="{ 'btn': issueFilter.status === 'resolved' }" @click="issueFilter.status = 'resolved'; refreshIssues()">Resolved</button>
+                <button class="btn-secondary" :class="{ 'btn': issueFilter.status === 'closed' }" @click="issueFilter.status = 'closed'; refreshIssues()">Closed</button>
+              </div>
+              <div class="list">
+                <template x-if="issues.length === 0">
+                  <div class="empty-state">No issues found.</div>
+                </template>
+                <template x-for="issue in issues" :key="issue.id">
+                  <div class="list-item">
+                    <div class="row">
+                      <div>
+                        <strong x-text="issue.title"></strong>
+                        <div class="muted" x-text="issue.description || 'No description'"></div>
+                      </div>
+                      <div class="actions">
+                        <span class="status-badge" :class="'status-' + issue.status" x-text="issue.status"></span>
+                        <button class="btn-secondary" @click="openIssueModal(issue)">Edit</button>
+                        <button class="btn-danger" @click="deleteIssue(issue.id)">Delete</button>
+                      </div>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 13px; color: var(--muted);">
+                      Assignee: <span x-text="issueAssigneeName(issue.assignee_id) || 'Unassigned'"></span>
+                      <span x-show="issue.feature_id"> &middot; Feature: <span x-text="issue.feature_id ? featureName(issue.feature_id) : ''"></span></span>
+                      &middot; Comments: <span x-text="issue.comment_count || 0"></span>
+                    </div>
+                    <div x-show="expandedIssueId === issue.id" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+                      <div class="list" style="gap: 8px;">
+                        <template x-for="c in issueComments" :key="c.id">
+                          <div style="font-size: 13px; padding: 8px; background: var(--panel-soft); border-radius: 6px;">
+                            <strong x-text="c.author_name"></strong>
+                            <span class="muted" style="font-size: 11px; margin-left: 8px;" x-text="c.created_at"></span>
+                            <div style="margin-top: 4px;" x-text="c.content"></div>
+                          </div>
+                        </template>
+                      </div>
+                      <form class="form-row" style="margin-top: 8px;" @submit.prevent="addIssueComment(issue.id)">
+                        <input type="text" x-model="issueCommentDraft" placeholder="Add a comment..." />
+                        <button class="btn" type="submit" :disabled="!issueCommentDraft.trim()">Comment</button>
+                      </form>
+                    </div>
+                    <button class="btn-secondary" style="margin-top: 8px; font-size: 12px;" @click="toggleIssueComments(issue.id)">
+                      <span x-text="expandedIssueId === issue.id ? 'Hide comments' : 'Show comments'"></span>
+                    </button>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </section>
+
+          <section x-show="currentPage === 'settings'" class="grid">
+            <div class="panel">
+              <div class="row">
+                <h2 class="section-title">AI Providers</h2>
+                <button class="btn" @click="openAIProviderModal(null)">+ Add Provider</button>
+              </div>
+              <p class="muted" style="margin-bottom: 16px;">Configure AI providers for the team chat. API keys are encrypted at rest.</p>
+              <div class="list">
+                <template x-if="aiProviders.length === 0">
+                  <div class="empty-state">No providers configured. Add one to enable AI chat.</div>
+                </template>
+                <template x-for="provider in aiProviders" :key="provider.id">
+                  <div class="list-item">
+                    <div class="row">
+                      <div>
+                        <strong x-text="provider.name"></strong>
+                        <div class="muted" x-text="provider.protocol + ' &middot; ' + provider.model"></div>
+                        <div class="muted" style="font-size: 12px;" x-text="provider.api_base_url"></div>
+                      </div>
+                      <div class="actions">
+                        <span class="badge" x-show="provider.is_active">Active</span>
+                        <button class="btn-secondary" @click="openAIProviderModal(provider)">Edit</button>
+                        <button class="btn-danger" @click="deleteAIProvider(provider.id)">Remove</button>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </section>
         </main>
+      </div>
+
+      <div class="modal-backdrop" x-show="confirmDialog.open" x-cloak>
+        <div class="modal" style="max-width: 420px">
+          <div class="modal-header">
+            <h3 x-text="confirmDialog.title"></h3>
+          </div>
+          <p x-text="confirmDialog.message" style="margin: 0 0 20px; color: var(--muted);"></p>
+          <div class="actions" style="justify-content: flex-end">
+            <button class="btn-secondary" @click="_handleConfirmCancel()">Cancel</button>
+            <button class="btn-danger" @click="_handleConfirmClick()">Confirm</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="toast-container">
+        <template x-for="toast in toasts" :key="toast.id">
+          <div class="toast" :class="'toast-' + toast.type" @click="dismissToast(toast.id)">
+            <span class="toast-icon" x-html="toast.icon"></span>
+            <span x-text="toast.message"></span>
+          </div>
+        </template>
+      </div>
+
+      <!-- AI Provider Modal -->
+      <div class="modal-backdrop" x-show="aiProviderModal.open" x-cloak>
+        <div class="modal" style="max-width: 600px">
+          <div class="modal-header">
+            <h3 x-text="editingProviderId ? 'Edit AI Provider' : 'Add AI Provider'"></h3>
+            <button class="btn-secondary" @click="closeAIProviderModal()">Close</button>
+          </div>
+          <form class="form-grid" @submit.prevent="saveAIProvider()">
+            <label>Provider Name<input type="text" x-model="aiProviderModal.name" placeholder="e.g. My Claude" /></label>
+            <label>Protocol<select x-model="aiProviderModal.protocol">
+              <option value="anthropic">Anthropic (Claude)</option>
+              <option value="openai">OpenAI-compatible (GPT, DeepSeek, Qwen)</option>
+            </select></label>
+            <label>API Base URL<input type="text" x-model="aiProviderModal.api_base_url" placeholder="https://api.anthropic.com" /></label>
+            <label>API Key<input type="password" x-model="aiProviderModal.api_key" placeholder="sk-..." /></label>
+            <label>Model<input type="text" x-model="aiProviderModal.model" placeholder="claude-sonnet-4-20250514" /></label>
+            <label class="row" style="justify-content: flex-start">
+              <input type="checkbox" x-model="aiProviderModal.is_active" />
+              <span>Active (use as default provider)</span>
+            </label>
+            <div class="actions">
+              <button class="btn" type="submit">Save</button>
+              <button class="btn-secondary" type="button" @click="testAIProvider()">Test Connection</button>
+              <button class="btn-secondary" type="button" @click="closeAIProviderModal()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Issue Modal -->
+      <div class="modal-backdrop" x-show="issueModal.open" x-cloak>
+        <div class="modal" style="max-width: 500px">
+          <div class="modal-header">
+            <h3 x-text="editingIssueId ? 'Edit Issue' : 'New Issue'"></h3>
+            <button class="btn-secondary" @click="closeIssueModal()">Close</button>
+          </div>
+          <form class="form-grid" @submit.prevent="saveIssue()">
+            <label>Title<input type="text" x-model="issueModal.title" placeholder="Brief description" /></label>
+            <label>Description<textarea x-model="issueModal.description" placeholder="Detailed description..."></textarea></label>
+            <div class="form-row">
+              <label>Status<select x-model="issueModal.status">
+                <option value="open">open</option><option value="in_progress">in_progress</option><option value="resolved">resolved</option><option value="closed">closed</option>
+              </select></label>
+              <label>Assignee<select x-model="issueModal.assignee_id">
+                <option value="">Unassigned</option>
+                <template x-for="member in members" :key="member.member_id">
+                  <option :value="String(member.member_id)" x-text="member.name"></option>
+                </template>
+              </select></label>
+            </div>
+            <div class="actions">
+              <button class="btn" type="submit">Save</button>
+              <button class="btn-secondary" type="button" @click="closeIssueModal()">Cancel</button>
+            </div>
+          </form>
+        </div>
       </div>
 
       <div class="modal-backdrop" x-show="featureModal.open" x-cloak>
@@ -1231,7 +1703,6 @@
     <script>
       function vibeRailsApp() {
         const baseUrl = "http://localhost:8000";
-        const featureStorageKey = "vibrails.features.v1";
 
         return {
           baseUrl,
@@ -1283,6 +1754,111 @@
             overview: "Overview",
             contracts: "Contracts",
             features: "Interfaces & Features",
+            issues: "Issues",
+            settings: "AI Provider Settings",
+          },
+          isDark: false,
+          toasts: [],
+          confirmDialog: { open: false, title: "", message: "" },
+          activeFeatureTab: "details",
+          // AI provider state
+          aiProviders: [],
+          aiProviderModal: { open: false, name: "", api_base_url: "", api_key: "", model: "claude-sonnet-4-20250514", protocol: "anthropic", is_active: true },
+          editingProviderId: null,
+          // Chat state
+          chatMessages: [],
+          chatLoading: false,
+          chatSending: false,
+          chatDraft: "",
+          lastChatMessageId: 0,
+          chatPollInterval: null,
+          // Issues state
+          issues: [],
+          issueModal: { open: false, title: "", description: "", status: "open", assignee_id: "", feature_id: "" },
+          editingIssueId: null,
+          issueFilter: { status: "", assignee_id: "" },
+          issueComments: [],
+          issueCommentDraft: "",
+          _confirmResolve: null,
+          sidebarOpen: true,
+          loadingMembers: false,
+          loadingContracts: false,
+          loadingInterfaces: false,
+          formErrors: {},
+          _loadingFlags: {},
+          _cache: {},
+
+          isLoading(name) {
+            return !!this._loadingFlags[name];
+          },
+
+          async withLoading(name, fn) {
+            this._loadingFlags = { ...this._loadingFlags, [name]: true };
+            try {
+              return await fn();
+            } finally {
+              const next = { ...this._loadingFlags };
+              delete next[name];
+              this._loadingFlags = next;
+            }
+          },
+
+          clearFormErrors() {
+            this.formErrors = {};
+          },
+
+          _cacheGet(key) {
+            const entry = this._cache[key];
+            if (!entry) return null;
+            if (Date.now() > entry.expires) {
+              delete this._cache[key];
+              return null;
+            }
+            return entry.value;
+          },
+
+          _cacheSet(key, value, ttlMs = 30000) {
+            this._cache[key] = { value, expires: Date.now() + ttlMs };
+          },
+
+          _cacheInvalidate(prefix) {
+            if (prefix) {
+              Object.keys(this._cache)
+                .filter((k) => k.startsWith(prefix))
+                .forEach((k) => delete this._cache[k]);
+            } else {
+              this._cache = {};
+            }
+          },
+
+          validateField(value, rules) {
+            if (rules.required && (!value || !value.toString().trim())) {
+              return rules.requiredMessage || "This field is required";
+            }
+            if (value && value.trim) {
+              const trimmed = value.trim();
+              if (rules.minLength && trimmed.length < rules.minLength) {
+                return `Minimum ${rules.minLength} characters required`;
+              }
+              if (rules.pattern && !rules.pattern.test(trimmed)) {
+                return rules.patternMessage || "Invalid format";
+              }
+            }
+            return "";
+          },
+
+          validateForm(formName, fields) {
+            const errors = {};
+            let hasError = false;
+            for (const [fieldName, rules] of Object.entries(fields)) {
+              const error = this.validateField(rules.value, rules);
+              if (error) {
+                errors[fieldName] = error;
+                hasError = true;
+              }
+            }
+            this.formErrors = { ...this.formErrors, [formName]: errors };
+            return !hasError;
           },
 
           get isCurrentUserOwner() {
@@ -1302,80 +1878,210 @@
           },
 
           async init() {
-            this.loadFeatures();
-            await this.refreshAll();
+            this.loadTheme();
+            await Promise.all([
+              this.loadFeatures(),
+              this.refreshAIProviders(),
+              this.refreshAll(),
+            ]);
+          },
+
+          loadTheme() {
+            const theme = localStorage.getItem("vibrails.theme") || "light";
+            this.isDark = theme === "dark";
+            document.documentElement.setAttribute("data-theme", theme);
+          },
+
+          toggleTheme() {
+            this.isDark = !this.isDark;
+            const theme = this.isDark ? "dark" : "light";
+            document.documentElement.setAttribute("data-theme", theme);
+            localStorage.setItem("vibrails.theme", theme);
+          },
+
+          toggleSidebar() {
+            this.sidebarOpen = !this.sidebarOpen;
+          },
+
+          showToast(message, type = "success", duration = 3000) {
+            const icons = { success: "&#10003;", error: "&#10007;", info: "&#9432;", warning: "&#9888;" };
+            const id = crypto.randomUUID();
+            this.toasts.push({ id, message, type, icon: icons[type] || icons.info });
+            if (this.toasts.length > 5) {
+              this.toasts.shift();
+            }
+            setTimeout(() => this.dismissToast(id), duration);
+          },
+
+          dismissToast(id) {
+            this.toasts = this.toasts.filter((t) => t.id !== id);
+          },
+
+          async confirm(title, message) {
+            return new Promise((resolve) => {
+              this._confirmResolve = resolve;
+              this.confirmDialog = { open: true, title, message };
+            });
+          },
+
+          _handleConfirmClick() {
+            const resolve = this._confirmResolve;
+            this.confirmDialog.open = false;
+            this._confirmResolve = null;
+            if (resolve) resolve(true);
+          },
+
+          _handleConfirmCancel() {
+            const resolve = this._confirmResolve;
+            this.confirmDialog.open = false;
+            this._confirmResolve = null;
+            if (resolve) resolve(false);
           },
 
           async api(path, options = {}) {
-            const response = await fetch(`${this.baseUrl}${path}`, {
-              headers: { "Content-Type": "application/json", ...(options.headers || {}) },
-              ...options,
-            });
+            const maxRetries = options.retries ?? 0;
+            const retryDelay = options.retryDelay ?? 1000;
+            const method = (options.method || "GET").toUpperCase();
+            const isIdempotent = ["GET", "PUT", "DELETE"].includes(method);
+            const cacheKey = method === "GET" ? `GET:${path}` : null;
 
-            let payload = null;
-            const text = await response.text();
-            if (text) {
+            // Check cache for GET requests
+            if (cacheKey) {
+              const cached = this._cacheGet(cacheKey);
+              if (cached) return cached;
+            }
+
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
               try {
-                payload = JSON.parse(text);
+                const response = await fetch(`${this.baseUrl}${path}`, {
+                  headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+                  ...options,
+                });
+
+                let payload = null;
+                const text = await response.text();
+                if (text) {
+                  try {
+                    payload = JSON.parse(text);
+                  } catch (error) {
+                    payload = text;
+                  }
+                }
+
+                if (!response.ok) {
+                  const detail =
+                    payload && typeof payload === "object" && payload.detail
+                      ? payload.detail
+                      : `Request failed: ${response.status}`;
+                  // Retry on 5xx for idempotent operations only
+                  if (attempt < maxRetries && response.status >= 500 && isIdempotent) {
+                    const delay = retryDelay * Math.pow(2, attempt);
+                    await new Promise((r) => setTimeout(r, delay));
+                    continue;
+                  }
+                  throw new Error(detail);
+                }
+
+                if (cacheKey) {
+                  this._cacheSet(cacheKey, payload);
+                }
+                return payload;
               } catch (error) {
-                payload = text;
+                if (attempt < maxRetries && isIdempotent && !(error instanceof TypeError)) {
+                  // Network errors (TypeError) always retry
+                  if (error.message && !error.message.startsWith("Request failed:")) {
+                    const delay = retryDelay * Math.pow(2, attempt);
+                    await new Promise((r) => setTimeout(r, delay));
+                    continue;
+                  }
+                }
+                throw error;
               }
             }
-
-            if (!response.ok) {
-              const detail =
-                payload && typeof payload === "object" && payload.detail
-                  ? payload.detail
-                  : `Request failed: ${response.status}`;
-              throw new Error(detail);
-            }
-
-            return payload;
           },
 
           async refreshAll() {
-            this.loading = true;
             this.error = "";
 
+            this.loadingMembers = true;
+            this.loadingContracts = true;
+            this.loadingInterfaces = true;
+
             try {
-              const [members, lockedModules, globalStandards, interfaces] = await Promise.all([
-                this.api("/members/"),
-                this.api("/contracts/locked"),
-                this.api("/contracts/standards/global"),
-                this.api("/contracts/interfaces"),
+              await Promise.all([
+                this.refreshMembers(),
+                this.refreshLockedModules(),
+                this.refreshGlobalStandards(),
+                this.refreshInterfaces(),
               ]);
 
-              const enrichedMembers = await Promise.all(
-                members.map(async (member) => {
-                  const [scope, personalStandards] = await Promise.all([
-                    this.fetchScope(member.member_id),
-                    this.fetchStandards(String(member.member_id)),
-                  ]);
-
-                  const goalStandard = personalStandards.find(
-                    (standard) => standard.category === "goal"
-                  );
-
-                  return {
-                    ...member,
-                    patterns: scope.patterns,
-                    personalStandards,
-                    goal: goalStandard ? goalStandard.content : "",
-                  };
-                })
-              );
-
-              this.members = enrichedMembers;
-              this.interfaces = interfaces;
-              this.lockedModules = lockedModules;
-              this.globalStandards = globalStandards;
               this.syncEditors();
               this.ensureOverviewSelection();
               this.setCurrentMember();
             } catch (error) {
               this.error = error.message || "Failed to load data.";
             } finally {
-              this.loading = false;
+              this.loadingMembers = false;
+              this.loadingContracts = false;
+              this.loadingInterfaces = false;
+            }
+          },
+
+          async refreshMembers() {
+            const members = await this.api("/members/");
+            const enrichedMembers = await Promise.all(
+              members.map(async (member) => {
+                const [scope, personalStandards] = await Promise.all([
+                  this.fetchScope(member.member_id),
+                  this.fetchStandards(String(member.member_id)),
+                ]);
+                const goalStandard = personalStandards.find(
+                  (standard) => standard.category === "goal"
+                );
+                return {
+                  ...member,
+                  patterns: scope.patterns,
+                  personalStandards,
+                  goal: goalStandard ? goalStandard.content : "",
+                };
+              })
+            );
+            this.members = enrichedMembers;
+          },
+
+          async refreshLockedModules() {
+            this.lockedModules = await this.api("/contracts/locked");
+          },
+
+          async refreshGlobalStandards() {
+            this.globalStandards = await this.api("/contracts/standards/global");
+          },
+
+          async refreshInterfaces() {
+            this.interfaces = await this.api("/contracts/interfaces");
+          },
+
+          async refreshSingleMember(memberId) {
+            try {
+              const [scope, personalStandards] = await Promise.all([
+                this.fetchScope(memberId),
+                this.fetchStandards(String(memberId)),
+              ]);
+              const idx = this.members.findIndex((m) => m.member_id === memberId);
+              if (idx === -1) return;
+              const goalStandard = personalStandards.find(
+                (s) => s.category === "goal"
+              );
+              this.members[idx] = {
+                ...this.members[idx],
+                patterns: scope.patterns,
+                personalStandards,
+                goal: goalStandard ? goalStandard.content : "",
+              };
+              // Trigger Alpine reactivity
+              this.members = [...this.members];
+            } catch (error) {
+              this.error = error.message || "Failed to refresh member.";
             }
           },
 
@@ -1487,15 +2193,25 @@
           },
 
           async createMember() {
-            await this.api("/members/", {
-              method: "POST",
-              body: JSON.stringify(this.newMember),
+            await this.withLoading("createMember", async () => {
+              await this.api("/members/", {
+                method: "POST",
+                body: JSON.stringify(this.newMember),
+              });
+              this.newMember = { name: "", role: "" };
+              await this.refreshMembers();
+              this.syncEditors();
+              this.ensureOverviewSelection();
+              this.showToast("Member added successfully", "success");
             });
-            this.newMember = { name: "", role: "" };
-            await this.refreshAll();
           },
 
           async deleteMember(memberId) {
+            const member = this.members.find((m) => m.member_id === memberId);
+            const name = member ? member.name : "this member";
+            if (!(await this.confirm("Delete Member", `Are you sure you want to remove ${name}? This will also delete their scope and personal standards.`))) {
+              return;
+            }
             await this.api(`/members/${memberId}`, { method: "DELETE" });
             if (this.expandedMemberId === memberId) {
               this.expandedMemberId = null;
@@ -1507,7 +2223,8 @@
             if (this.selectedOverviewMemberId === memberId) {
               this.selectedOverviewMemberId = null;
             }
-            await this.refreshAll();
+            await this.refreshMembers();
+            this.showToast("Member deleted", "success");
           },
 
           async addPattern(memberId) {
@@ -1527,10 +2244,14 @@
               body: JSON.stringify({ patterns }),
             });
             this.patternDrafts[memberId] = "";
-            await this.refreshAll();
+            await this.refreshSingleMember(memberId);
+            this.showToast("Pattern added", "success");
           },
 
           async removePattern(memberId, pattern) {
+            if (!(await this.confirm("Remove Pattern", `Remove the scope pattern "${pattern}"?`))) {
+              return;
+            }
             const member = this.members.find((item) => item.member_id === memberId);
             if (!member) {
               return;
@@ -1552,7 +2273,8 @@
               });
             }
 
-            await this.refreshAll();
+            await this.refreshSingleMember(memberId);
+            this.showToast("Pattern removed", "success");
           },
 
           async saveGlobalStandard() {
@@ -1578,17 +2300,22 @@
             }
 
             this.resetGlobalEditor();
-            await this.refreshAll();
+            await this.refreshGlobalStandards();
+            this.showToast("Global standard saved", "success");
           },
 
           async deleteGlobalStandard(category) {
+            if (!(await this.confirm("Delete Standard", `Are you sure you want to delete the "${category}" global standard?`))) {
+              return;
+            }
             await this.api(`/contracts/standards/global/${encodeURIComponent(category)}`, {
               method: "DELETE",
             });
             if (this.globalEditor.originalCategory === category) {
               this.resetGlobalEditor();
             }
-            await this.refreshAll();
+            await this.refreshGlobalStandards();
+            this.showToast("Global standard deleted", "success");
           },
 
           async savePersonalStandard(memberId) {
@@ -1617,17 +2344,22 @@
             }
 
             this.resetPersonalEditor(memberId);
-            await this.refreshAll();
+            await this.refreshSingleMember(memberId);
+            this.showToast("Personal standard saved", "success");
           },
 
           async deletePersonalStandard(memberId, category) {
+            if (!(await this.confirm("Delete Standard", `Are you sure you want to delete the "${category}" personal standard?`))) {
+              return;
+            }
             await this.api(`/contracts/standards/${memberId}/${encodeURIComponent(category)}`, {
               method: "DELETE",
             });
             if (this.personalEditors[memberId]?.originalCategory === category) {
               this.resetPersonalEditor(memberId);
             }
-            await this.refreshAll();
+            await this.refreshSingleMember(memberId);
+            this.showToast("Personal standard deleted", "success");
           },
 
           async createLockedModule() {
@@ -1636,10 +2368,14 @@
               body: JSON.stringify(this.newLocked),
             });
             this.newLocked = { pattern: "", reason: "" };
-            await this.refreshAll();
+            await this.refreshLockedModules();
+            this.showToast("Locked module added", "success");
           },
 
           async deleteLockedModule(pattern) {
+            if (!(await this.confirm("Delete Locked Module", `Are you sure you want to remove the locked module "${pattern}"?`))) {
+              return;
+            }
             const encodedPattern = pattern
               .split("/")
               .map((part) => encodeURIComponent(part))
@@ -1648,7 +2384,8 @@
             await this.api(`/contracts/locked/${encodedPattern}`, {
               method: "DELETE",
             });
-            await this.refreshAll();
+            await this.refreshLockedModules();
+            this.showToast("Locked module removed", "success");
           },
 
           openInterfaceEditor(item) {
@@ -1682,7 +2419,8 @@
               }),
             });
             this.closeInterfaceEditor();
-            await this.refreshAll();
+            await this.refreshInterfaces();
+            this.showToast("Interface updated", "success");
           },
 
           openPlannedInterfaceModal() {
@@ -1717,145 +2455,349 @@
               }),
             });
             this.closePlannedInterfaceModal();
-            await this.refreshAll();
+            await this.refreshInterfaces();
+            this.showToast("Planned interface created", "success");
           },
 
-          loadFeatures() {
-            const raw = localStorage.getItem(featureStorageKey);
-            this.features = raw ? JSON.parse(raw) : [];
+          // ===============================
+          // Features (API-backed)
+          // ===============================
+          async loadFeatures() {
+            try {
+              this.features = await this.api("/features/");
+            } catch {
+              this.features = [];
+            }
             if (this.features.length > 0 && !this.selectedFeatureId) {
               this.selectFeature(this.features[0].id);
             }
           },
 
-          saveFeatures() {
-            localStorage.setItem(featureStorageKey, JSON.stringify(this.features));
-          },
-
           openFeatureModal() {
             this.featureModal = {
-              open: true,
-              name: "",
-              description: "",
-              status: "planned",
-              owner_id: "",
+              open: true, name: "", description: "", status: "planned", owner_id: "",
             };
           },
 
           closeFeatureModal() {
             this.featureModal = {
-              open: false,
-              name: "",
-              description: "",
-              status: "planned",
-              owner_id: "",
+              open: false, name: "", description: "", status: "planned", owner_id: "",
             };
           },
 
-          createFeature() {
+          async createFeature() {
             const draft = this.featureModal;
-            if (!draft.name.trim()) {
-              return;
-            }
-
-            const feature = {
-              id: crypto.randomUUID(),
-              name: draft.name.trim(),
-              description: draft.description,
-              status: draft.status,
-              owner_id: draft.owner_id ? Number(draft.owner_id) : null,
-              interface_ids: [],
-              comments: [],
-            };
-            this.features.push(feature);
-            this.saveFeatures();
+            if (!draft.name.trim()) return;
+            const id = crypto.randomUUID();
+            await this.api("/features/", {
+              method: "POST",
+              body: JSON.stringify({
+                id, name: draft.name.trim(), description: draft.description,
+                status: draft.status, owner_id: draft.owner_id ? Number(draft.owner_id) : null,
+              }),
+            });
             this.closeFeatureModal();
-            this.selectFeature(feature.id);
+            await this.loadFeatures();
+            this.selectFeature(id);
+            this.showToast("Feature created", "success");
           },
 
           selectFeature(featureId) {
             this.selectedFeatureId = featureId;
             const feature = this.selectedFeature;
             this.selectedFeatureDraft = feature
-              ? {
-                  name: feature.name,
-                  description: feature.description,
-                  status: feature.status,
-                  owner_id: feature.owner_id ? String(feature.owner_id) : "",
-                }
+              ? { name: feature.name, description: feature.description, status: feature.status, owner_id: feature.owner_id ? String(feature.owner_id) : "" }
               : {};
             this.interfaceLinkDraft = "";
+            this.stopChatPolling();
           },
 
-          saveFeatureDetails() {
+          async saveFeatureDetails() {
             const feature = this.selectedFeature;
-            if (!feature) {
-              return;
-            }
-
-            feature.name = this.selectedFeatureDraft.name;
-            feature.description = this.selectedFeatureDraft.description;
-            feature.status = this.selectedFeatureDraft.status;
-            feature.owner_id = this.selectedFeatureDraft.owner_id
-              ? Number(this.selectedFeatureDraft.owner_id)
-              : null;
-            this.saveFeatures();
+            if (!feature) return;
+            await this.api(`/features/${encodeURIComponent(feature.id)}`, {
+              method: "PATCH",
+              body: JSON.stringify(this.selectedFeatureDraft),
+            });
+            await this.loadFeatures();
+            this.showToast("Feature saved", "success");
           },
 
           featureInterfaces(feature) {
-            if (!feature) {
-              return [];
-            }
-
-            return this.interfaces.filter((item) => feature.interface_ids.includes(item.id));
+            if (!feature) return [];
+            return this.interfaces.filter((item) => (feature.interface_ids || []).includes(item.id));
           },
 
           unassignedInterfaces() {
-            const assigned = new Set(
-              this.features.flatMap((feature) => feature.interface_ids)
-            );
+            const assigned = new Set(this.features.flatMap((f) => f.interface_ids || []));
             return this.interfaces.filter((item) => !assigned.has(item.id));
           },
 
-          linkInterfaceToSelectedFeature() {
+          async linkInterfaceToSelectedFeature() {
             const feature = this.selectedFeature;
             const interfaceId = Number(this.interfaceLinkDraft);
-            if (!feature || !interfaceId) {
-              return;
-            }
-
-            if (!feature.interface_ids.includes(interfaceId)) {
-              feature.interface_ids.push(interfaceId);
-              this.saveFeatures();
-            }
-            this.interfaceLinkDraft = "";
-          },
-
-          unlinkInterfaceFromSelectedFeature(interfaceId) {
-            const feature = this.selectedFeature;
-            if (!feature) {
-              return;
-            }
-
-            feature.interface_ids = feature.interface_ids.filter((id) => id !== interfaceId);
-            this.saveFeatures();
-          },
-
-          addCommentToSelectedFeature() {
-            const feature = this.selectedFeature;
-            const content = this.commentDraft.trim();
-            if (!feature || !content) {
-              return;
-            }
-
-            feature.comments.push({
-              id: crypto.randomUUID(),
-              author: this.currentMember ? this.currentMember.name : "Anonymous",
-              created_at: new Date().toLocaleString(),
-              content,
+            if (!feature || !interfaceId) return;
+            await this.api(`/features/${encodeURIComponent(feature.id)}/interfaces`, {
+              method: "POST",
+              body: JSON.stringify({ interface_id: interfaceId }),
             });
-            this.commentDraft = "";
-            this.saveFeatures();
+            this.interfaceLinkDraft = "";
+            await this.loadFeatures();
+            this.showToast("Interface linked", "success");
+          },
+
+          async unlinkInterfaceFromSelectedFeature(interfaceId) {
+            const feature = this.selectedFeature;
+            if (!feature) return;
+            await this.api(`/features/${encodeURIComponent(feature.id)}/interfaces/${interfaceId}`, {
+              method: "DELETE",
+            });
+            await this.loadFeatures();
+            this.showToast("Interface unlinked", "success");
+          },
+
+          // ===============================
+          // AI Provider Methods
+          // ===============================
+          async refreshAIProviders() {
+            try {
+              this.aiProviders = await this.api("/ai/providers");
+            } catch {
+              this.aiProviders = [];
+            }
+          },
+
+          openAIProviderModal(provider) {
+            if (provider) {
+              this.editingProviderId = provider.id;
+              this.aiProviderModal = {
+                open: true, name: provider.name, api_base_url: provider.api_base_url,
+                api_key: "", model: provider.model, protocol: provider.protocol,
+                is_active: provider.is_active,
+              };
+            } else {
+              this.editingProviderId = null;
+              this.aiProviderModal = {
+                open: true, name: "", api_base_url: "", api_key: "",
+                model: "claude-sonnet-4-20250514", protocol: "anthropic", is_active: true,
+              };
+            }
+          },
+
+          closeAIProviderModal() {
+            this.aiProviderModal.open = false;
+            this.editingProviderId = null;
+          },
+
+          async saveAIProvider() {
+            const m = this.aiProviderModal;
+            if (!m.name.trim() || !m.api_base_url.trim() || !m.api_key.trim()) {
+              this.showToast("Please fill in all required fields", "error");
+              return;
+            }
+            if (this.editingProviderId) {
+              const body = { name: m.name, api_base_url: m.api_base_url, model: m.model, protocol: m.protocol, is_active: m.is_active };
+              if (m.api_key) body.api_key = m.api_key;
+              await this.api(`/ai/providers/${this.editingProviderId}`, { method: "PATCH", body: JSON.stringify(body) });
+            } else {
+              await this.api("/ai/providers", {
+                method: "POST",
+                body: JSON.stringify(m),
+              });
+            }
+            this.closeAIProviderModal();
+            await this.refreshAIProviders();
+            this.showToast("AI provider saved", "success");
+          },
+
+          async deleteAIProvider(id) {
+            if (!(await this.confirm("Delete Provider", "Are you sure you want to remove this AI provider?"))) return;
+            await this.api(`/ai/providers/${id}`, { method: "DELETE" });
+            await this.refreshAIProviders();
+            this.showToast("AI provider deleted", "success");
+          },
+
+          async testAIProvider() {
+            const m = this.aiProviderModal;
+            if (!m.api_base_url.trim() || !m.api_key.trim()) {
+              this.showToast("Fill in API URL and Key first", "error");
+              return;
+            }
+            this.showToast("Testing connection...", "info");
+            try {
+              const result = await this.api("/ai/providers/test", {
+                method: "POST",
+                body: JSON.stringify(m),
+              });
+              if (result.success) {
+                this.showToast("Connection successful!", "success");
+              } else {
+                this.showToast(result.message || "Connection failed", "error");
+              }
+            } catch (err) {
+              this.showToast("Connection failed: " + err.message, "error");
+            }
+          },
+
+          // ===============================
+          // Chat Methods
+          // ===============================
+          async loadChatMessages(featureId) {
+            if (!featureId) return;
+            this.chatLoading = true;
+            try {
+              this.chatMessages = await this.api(`/chat/${encodeURIComponent(featureId)}`);
+              this.lastChatMessageId = this.chatMessages.length > 0 ? this.chatMessages[this.chatMessages.length - 1].id : 0;
+              this.startChatPolling(featureId);
+            } catch {
+              this.chatMessages = [];
+            } finally {
+              this.chatLoading = false;
+            }
+          },
+
+          startChatPolling(featureId) {
+            this.stopChatPolling();
+            this.chatPollInterval = setInterval(async () => {
+              try {
+                const newMsgs = await this.api(`/chat/${encodeURIComponent(featureId)}/since/${this.lastChatMessageId}`);
+                if (newMsgs.length > 0) {
+                  this.chatMessages = [...this.chatMessages, ...newMsgs];
+                  this.lastChatMessageId = newMsgs[newMsgs.length - 1].id;
+                }
+              } catch { /* ignore polling errors */ }
+            }, 5000);
+          },
+
+          stopChatPolling() {
+            if (this.chatPollInterval) {
+              clearInterval(this.chatPollInterval);
+              this.chatPollInterval = null;
+            }
+          },
+
+          async sendChatMessage() {
+            const feature = this.selectedFeature;
+            if (!feature || !this.chatDraft.trim() || this.chatSending) return;
+            this.chatSending = true;
+            try {
+              const result = await this.api("/chat/send", {
+                method: "POST",
+                body: JSON.stringify({ feature_id: feature.id, content: this.chatDraft.trim() }),
+              });
+              this.chatMessages = [...this.chatMessages, result.user_message, result.assistant_message];
+              this.lastChatMessageId = result.assistant_message.id;
+              this.chatDraft = "";
+            } catch (err) {
+              this.showToast(err.message || "Failed to send message", "error");
+            } finally {
+              this.chatSending = false;
+            }
+          },
+
+          // ===============================
+          // Issue Methods
+          // ===============================
+          expandedIssueId: null,
+
+          async refreshIssues(featureId) {
+            const params = new URLSearchParams();
+            if (this.issueFilter.status) params.set("status", this.issueFilter.status);
+            if (featureId) params.set("feature_id", featureId);
+            try {
+              this.issues = await this.api(`/issues/?${params.toString()}`);
+            } catch {
+              this.issues = [];
+            }
+          },
+
+          openIssueModal(issue) {
+            if (issue) {
+              this.editingIssueId = issue.id;
+              this.issueModal = {
+                open: true, title: issue.title, description: issue.description || "",
+                status: issue.status, assignee_id: issue.assignee_id ? String(issue.assignee_id) : "",
+                feature_id: issue.feature_id || "",
+              };
+            } else {
+              this.editingIssueId = null;
+              this.issueModal = {
+                open: true, title: "", description: "", status: "open", assignee_id: "",
+                feature_id: this.selectedFeature ? this.selectedFeature.id : "",
+              };
+            }
+          },
+
+          closeIssueModal() {
+            this.issueModal.open = false;
+            this.editingIssueId = null;
+          },
+
+          async saveIssue() {
+            const m = this.issueModal;
+            if (!m.title.trim()) { this.showToast("Title is required", "error"); return; }
+            const body = {
+              title: m.title.trim(), description: m.description, status: m.status,
+              assignee_id: m.assignee_id ? Number(m.assignee_id) : null,
+              feature_id: m.feature_id || null,
+            };
+            if (this.editingIssueId) {
+              await this.api(`/issues/${this.editingIssueId}`, { method: "PATCH", body: JSON.stringify(body) });
+            } else {
+              await this.api("/issues/", { method: "POST", body: JSON.stringify(body) });
+            }
+            this.closeIssueModal();
+            await this.refreshIssues();
+            this.showToast("Issue saved", "success");
+          },
+
+          async deleteIssue(id) {
+            if (!(await this.confirm("Delete Issue", "Are you sure you want to delete this issue?"))) return;
+            await this.api(`/issues/${id}`, { method: "DELETE" });
+            await this.refreshIssues();
+            this.showToast("Issue deleted", "success");
+          },
+
+          toggleIssueComments(issueId) {
+            if (this.expandedIssueId === issueId) {
+              this.expandedIssueId = null;
+              this.issueComments = [];
+            } else {
+              this.expandedIssueId = issueId;
+              this.loadIssueComments(issueId);
+            }
+          },
+
+          async loadIssueComments(issueId) {
+            try {
+              this.issueComments = await this.api(`/issues/${issueId}/comments`);
+            } catch {
+              this.issueComments = [];
+            }
+          },
+
+          async addIssueComment(issueId) {
+            if (!this.issueCommentDraft.trim()) return;
+            await this.api(`/issues/${issueId}/comments`, {
+              method: "POST",
+              body: JSON.stringify({ content: this.issueCommentDraft.trim() }),
+            });
+            this.issueCommentDraft = "";
+            await this.loadIssueComments(issueId);
+            await this.refreshIssues();
+            this.showToast("Comment added", "success");
+          },
+
+          issueAssigneeName(assigneeId) {
+            if (!assigneeId) return "";
+            const member = this.members.find((m) => String(m.member_id) === String(assigneeId));
+            return member ? member.name : "";
+          },
+
+          featureName(featureId) {
+            if (!featureId) return "";
+            const f = this.features.find((feat) => feat.id === featureId);
+            return f ? f.name : featureId;
           },
 
           ownerName(ownerId) {
